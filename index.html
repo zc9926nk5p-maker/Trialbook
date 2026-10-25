@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#1F4D3F">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Trialbook">
+<meta name="description" content="Plan, run and track IGP dog training for multiple dogs, with notes, photos, video, voice memos and timers.">
+<title>Trialbook – IGP training companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EFF2EE;--surface:#FFFFFF;--surface2:#E4E9E3;--ink:#15201B;--muted:#56635D;--line:#D1D8D1;--primary:#1F4D3F;--onprimary:#FFFFFF;--accent:#D9480F;--T:#7F5314;--Tt:#F1E6D1;--O:#2A5A99;--Ot:#DCE7F4;--P:#B0332A;--Pt:#F5DDD9;--B:#5B4A8A;--Bt:#E6E0F2;--ok:#2B7A4B;--bad:#B0332A;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1512;--surface:#17221D;--surface2:#213029;--ink:#E7EEE9;--muted:#9BAAA2;--line:#2B3B34;--primary:#58B391;--onprimary:#06150F;--accent:#FF8A4C;--T:#E3B06A;--Tt:#2E2415;--O:#8DB6EE;--Ot:#17263A;--P:#F08A80;--Pt:#3A1B18;--B:#B7A6EA;--Bt:#2A2340;--ok:#6CCB93;--bad:#F08A80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1512;--surface:#17221D;--surface2:#213029;--ink:#E7EEE9;--muted:#9BAAA2;--line:#2B3B34;--primary:#58B391;--onprimary:#06150F;--accent:#FF8A4C;--T:#E3B06A;--Tt:#2E2415;--O:#8DB6EE;--Ot:#17263A;--P:#F08A80;--Pt:#3A1B18;--B:#B7A6EA;--Bt:#2A2340;--ok:#6CCB93;--bad:#F08A80;color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+body.lock{overflow:hidden}
+h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;margin:0;font-weight:700;letter-spacing:.01em}
+h1{font-size:30px}h2{font-size:24px}h3{font-size:19px}
+p{margin:0 0 10px}
+button{font:inherit;color:inherit;cursor:pointer}
+#hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);padding:10px 16px 8px;display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--line)}
+#hdr .live{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:20px;color:var(--accent)}
+#view{padding:14px 14px 170px;max-width:640px;margin:0 auto}
+.pad{display:flex;flex-direction:column;gap:14px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;background:none;padding:9px 0 8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:13px;font-weight:600;color:var(--muted);min-height:58px}
+nav button.on{color:var(--primary)}
+#tfab{position:fixed;right:14px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:26;min-width:56px;height:56px;border-radius:28px;border:0;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;box-shadow:0 3px 14px rgba(0,0,0,.28);font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #tfab{color:#1a0b02}}
+:root[data-theme="dark"] #tfab{color:#1a0b02}
+.btn{font-weight:600;min-height:48px;padding:0 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn.pri{background:var(--primary);color:var(--onprimary);border-color:var(--primary)}
+.btn.warn{color:var(--bad);border-color:var(--bad)}
+.btn.big{min-height:56px;font-size:18px;width:100%}
+.btn.sm{min-height:38px;padding:0 12px;font-size:14px;border-radius:10px}
+.btn:disabled{opacity:.45}
+.ibtn{width:44px;height:44px;border-radius:12px;border:0;background:none;display:inline-flex;align-items:center;justify-content:center}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.card.T{border-left:5px solid var(--T)}.card.O{border-left:5px solid var(--O)}.card.P{border-left:5px solid var(--P)}.card.B{border-left:5px solid var(--B)}
+.row{display:flex;align-items:center;gap:10px}.row.sb{justify-content:space-between}.wrap{flex-wrap:wrap}
+.muted{color:var(--muted)}.small{font-size:14px}.tiny{font-size:12.5px}
+.tag{display:inline-block;font-size:12.5px;font-weight:600;padding:1px 8px;border-radius:6px}
+.tag.T{background:var(--Tt);color:var(--T)}.tag.O{background:var(--Ot);color:var(--O)}.tag.P{background:var(--Pt);color:var(--P)}.tag.B{background:var(--Bt);color:var(--B)}.tag.n{background:var(--surface2);color:var(--muted)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;min-height:42px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.chip.on{border-color:var(--dc,var(--primary));box-shadow:inset 0 0 0 1.5px var(--dc,var(--primary))}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--dc,var(--primary));flex:none}
+.seg{display:flex;background:var(--surface2);border-radius:12px;padding:3px;gap:3px}
+.seg button{flex:1;min-height:40px;border:0;background:none;border-radius:9px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.inp,.ta,.sel{width:100%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:11px 12px;font:inherit;min-height:46px}
+.ta{min-height:92px;resize:vertical}
+.lbl{display:block;font-weight:600;font-size:14px;margin:0 0 5px;color:var(--muted)}
+.fld{display:flex;flex-direction:column}
+.empty{padding:36px 8px;text-align:center}.empty p{color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px;display:flex;align-items:center;gap:12px}
+.item.T{border-left:5px solid var(--T)}.item.O{border-left:5px solid var(--O)}.item.P{border-left:5px solid var(--P)}.item.B{border-left:5px solid var(--B)}
+.item .grow{flex:1;min-width:0}
+.item b{display:block;font-size:17px;font-weight:600}
+.sheet{position:fixed;inset:0;z-index:40;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch}
+.shead{position:sticky;top:0;z-index:2;background:var(--bg);padding:calc(env(safe-area-inset-top,0px) + 8px) 10px 8px;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--line)}
+.shead h2{flex:1;font-size:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sbody{padding:14px 14px 40px;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.sfoot{position:sticky;bottom:0;background:var(--bg);border-top:1px solid var(--line);padding:10px 14px calc(env(safe-area-inset-bottom,0px) + 10px);display:flex;gap:10px;max-width:none}
+.sfoot .btn{flex:1}
+details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0 14px}
+summary{min-height:48px;display:flex;align-items:center;font-weight:600;cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";margin-left:auto;font-size:22px;color:var(--muted)}
+details[open] summary::after{content:"–"}
+details .dbody{padding:0 0 14px}
+ol,ul{margin:0;padding-left:22px}li{margin:0 0 7px}
+.counters{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cnt{border-radius:16px;border:2px solid var(--line);background:var(--surface);padding:12px;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:112px;justify-content:center}
+.cnt .n{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:52px;line-height:1}
+.cnt.ok{border-color:var(--ok);color:var(--ok)}.cnt.bad{border-color:var(--bad);color:var(--bad)}
+.cnt span.l{font-weight:600;font-size:15px}
+.rate{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.rate button{min-height:52px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:700}
+.rate button.on{background:var(--primary);border-color:var(--primary);color:var(--onprimary)}
+.caps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.caps button{min-height:64px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:600}
+.media{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mth{aspect-ratio:1;border-radius:10px;background:var(--surface2);border:1px solid var(--line);overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative;padding:0;color:var(--muted)}
+.mth img,.mth video{width:100%;height:100%;object-fit:cover}
+.mth .k{position:absolute;left:5px;bottom:5px;background:rgba(0,0,0,.6);color:#fff;border-radius:6px;padding:1px 5px;font-size:11px}
+.bars{display:flex;align-items:flex-end;gap:3px;height:34px;width:84px}
+.bars i{flex:1;border-radius:2px 2px 0 0;background:var(--bc,var(--primary));min-height:3px}
+.timer{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px}
+.timer .big{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:64px;line-height:1;letter-spacing:.01em}
+.timer.done{border-color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.timer.run .big{color:var(--accent)}
+#recbar{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:70;background:#B0332A;color:#fff;border-radius:14px;padding:10px 12px;display:none;align-items:center;gap:10px;box-shadow:0 4px 18px rgba(0,0,0,.4)}
+#recbar.on{display:flex}
+#recbar .pulse{width:12px;height:12px;border-radius:50%;background:#fff;animation:p 1s infinite}
+@keyframes p{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){#recbar .pulse{animation:none}}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(140px + env(safe-area-inset-bottom,0px));z-index:80;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;font-size:15px;max-width:88vw;display:none;text-align:center}
+#toast.on{display:block}
+#modal{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:24px}
+#modal.on{display:flex}
+#modal .box{background:var(--surface);border-radius:16px;padding:18px;max-width:420px;width:100%}
+ .av{position:relative;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--dc,var(--primary));color:#fff;font-weight:700;overflow:hidden;flex:none;font-family:"Barlow Condensed",sans-serif}
+.av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px}
+.fig+.fig{margin-top:10px}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{font-size:12.5px;color:var(--muted);padding:4px 4px 2px}
+.dsv text{font-family:Barlow,system-ui,sans-serif;font-size:10px;fill:var(--muted)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.hl{border-left:4px solid var(--accent);background:var(--surface);padding:10px 12px;border-radius:0 10px 10px 0}
+.stat{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal .hd{font-size:12px;text-align:center;color:var(--muted);font-weight:600}
+.cday{aspect-ratio:1;border-radius:10px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:600;padding:0;min-height:44px}
+.cday:disabled{opacity:.55;background:transparent;border-color:transparent}
+.cday.today{outline:2px solid var(--accent)}
+.cdots{display:flex;gap:2px;min-height:7px}.cdots i{width:7px;height:7px;border-radius:50%}
+.pips{display:flex;gap:5px}.pips i{width:14px;height:14px;border-radius:50%;border:2px solid var(--primary)}.pips i.f{background:var(--primary)}
+.dict.live{background:#B0332A;color:#fff;border-color:#B0332A}
+
+:root{--tint:color-mix(in srgb,var(--primary) 14%,transparent);--shadow:0 1px 2px rgba(15,35,28,.07),0 8px 22px rgba(15,35,28,.07);--grad:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 58%,#000))}
+body{background-image:radial-gradient(900px 360px at 100% -80px,var(--tint),transparent 70%);background-repeat:no-repeat}
+.card,.item,.timer,.diag,details{box-shadow:var(--shadow);border-radius:16px}
+#tfab{color:var(--onaccent,#fff)!important}
+#hdr .brand{display:flex;align-items:center;gap:10px;min-width:0}
+#hdr .mark{flex:none;border-radius:8px}
+#hdr h1{font-size:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hdr{align-items:center}
+nav button .ic{width:56px;height:30px;border-radius:15px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+nav button.on .ic{background:var(--tint)}
+#view .pad>div>h3{display:flex;align-items:center;gap:8px}
+#view .pad>div>h3::before{content:"";width:4px;height:18px;border-radius:2px;background:var(--accent)}
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:18px;color:var(--onprimary);background:var(--primary);background:var(--grad)}
+.hero::after{content:"";position:absolute;right:-18px;bottom:-26px;width:210px;height:170px;opacity:.16;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 210 170'%3E%3Cpath d='M10 150h70V90h60V40h60' fill='none' stroke='white' stroke-width='10' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='2 16'/%3E%3Ccircle cx='200' cy='40' r='9' fill='white'/%3E%3C/svg%3E") no-repeat;pointer-events:none}
+.hero h2{font-size:32px;line-height:1.05;margin-top:2px}
+.hero .hb{background:var(--onprimary);color:var(--primary);border-color:var(--onprimary);position:relative;z-index:1}
+.ring{position:relative;width:46px;height:46px;flex:none;color:var(--onprimary)}
+.ring svg{position:absolute;inset:0;width:100%;height:100%}
+.ring .av{position:absolute;left:6px;top:6px}
+.sw{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.swb{display:flex;align-items:center;gap:8px;min-height:52px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);padding:0 12px;font-weight:600}
+.swb i{width:22px;height:22px;border-radius:50%;flex:none;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.swb i+i{margin-left:-14px}
+.swb.on{border-color:var(--primary);box-shadow:inset 0 0 0 1.5px var(--primary)}
+input[type=color]{width:64px;height:46px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);padding:3px}
+.splash{position:fixed;inset:0;z-index:100;background:var(--primary);background:var(--grad);color:var(--onprimary);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:opacity .55s}
+.splash.out{opacity:0;pointer-events:none}
+.splash .sname{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:46px;letter-spacing:.02em;line-height:1}
+.splash .stag{font-size:14px;letter-spacing:.3em;text-transform:uppercase;opacity:.8}
+.splash svg{animation:pop .7s ease-out both}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.splash svg{animation:none}.splash{transition:none}}
+</style>
+</head>
+<body>
+<div id="hdr"></div>
+<main id="view"></main>
+<nav id="nav"></nav>
+<button id="tfab" data-a="timers" aria-label="Timers"></button>
+<div id="recbar"></div>
+<div id="sheets"></div>
+<div id="toast"></div>
+<div id="modal"></div>
+<div class="splash" id="splash"><svg viewBox="0 0 512 512" width="104" height="104" aria-hidden="true"><rect width="512" height="512" rx="112" fill="rgba(255,255,255,.16)"/><g fill="currentColor"><ellipse cx="150" cy="238" rx="31" ry="42" transform="rotate(-24 150 238)"/><ellipse cx="220" cy="170" rx="33" ry="46" transform="rotate(-8 220 170)"/><ellipse cx="292" cy="170" rx="33" ry="46" transform="rotate(8 292 170)"/><ellipse cx="362" cy="238" rx="31" ry="42" transform="rotate(24 362 238)"/><path d="M256 262c-52 0-92 48-92 92 0 38 30 50 58 40 20-7 56-7 76 0 28 10 58-2 58-40 0-44-40-92-100-92z"/></g><path d="M206 356h50v-40h52" fill="none" stroke="var(--accent)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><circle cx="308" cy="316" r="13" fill="var(--accent)"/></svg><div class="sname">Trialbook</div><div class="stag">Plan · Train · Track</div></div>
+
+<script>
+(()=>{
+'use strict';
+
+/* ====================== LIBRARY DATA ======================
+   Baseline built from the FCI IGP regulations (2025 revision) that CWDF / GSSCC trials run under.
+   Everything is editable in the app. Confirm points, distances and Canadian variances in your club's rulebook. */
+const LV=['BH','IGP1','IGP2','IGP3'];
+const LVN={BH:'BH',IGP1:'IGP 1',IGP2:'IGP 2',IGP3:'IGP 3'};
+const PH={B:'Companion',T:'Tracking',O:'Obedience',P:'Protection'};
+const PHO=['B','T','O','P'];
+const IG=['IGP1','IGP2','IGP3'];
+const X=(id,ph,name,lv,std,steps,faults,o={})=>Object.assign({id,ph,name,lv,std,steps,faults,pts:'',lvn:{},v:false},o);
+const BASE=[
+X('b_heel','B','Heeling on leash',['BH'],'Dog works at your left knee, attentive, leash slack, sits straight at each halt. In the 2025 rules this exercise is worth 30 points and no longer includes left and right turns.',
+ ['Reward position: dog’s shoulder at your leg, eyes up, treat delivered at your hip.','Add 3–5 steps, mark and reward in position.','Add halts with an automatic sit; reward the sit, not the stop.','Add pace changes and about-turns, then walk through a group of people.','Proof near dogs, traffic and noise.'],
+ ['Forging or lagging','Crooked sits','Leash going tight','Sniffing in the group'],{pts:'30',v:true}),
+X('b_sitdown','B','Sit and down out of motion',['BH'],'While you keep walking, the dog sits (or downs) on one command and stays put as you continue, then rejoins on your return.',
+ ['Teach sit and down as stationary behaviours first.','Slow your walk, give the cue, keep walking one step, return and reward.','Add distance a few steps at a time.','Add speed, then distractions.'],
+ ['Creeping forward','Anticipating the cue','Dog following instead of staying'],{v:true}),
+X('b_recall','B','Recall',['BH'],'Dog comes straight, fast and sits in front (or finishes) on command.',
+ ['Reward the front position at 1 m.','Add distance in steps of 2–3 m, always reward in front.','Call from a down or sit; add a quick release.','Proof with distraction and a long line.'],
+ ['Slow return','Crooked or no front','Circling past you'],{v:true}),
+X('b_traffic','B','Traffic and social test (BH-VT)',['BH'],'Dog stays steady around people, joggers, bicycles, vehicles and other dogs, and can be tied up alone without fuss.',
+ ['Start at a distance from each trigger, reward calm.','Close the gap gradually over many outings.','Practise being tied up with you in sight, then out of sight.','Visit busy places: shops, sidewalks, parking lots.'],
+ ['Lunging or barking','Fixating on triggers','Frantic when tied up'],{v:true}),
+
+X('t_start','T','Start and scent pick-up',IG,'Dog takes the scent calmly at the start and begins working the first leg with a deep nose and steady pace.',
+ ['Harness on, calm walk to the start flag.','Let the dog settle, then show the scent area with a slack line.','Use a short, consistent search cue.','Reward on the first steps, then spread the treats out.'],
+ ['Rushing the start','Dog skipping the scent area','Handler tension on the line']),
+X('t_track','T','Full track',IG,'Dog follows the track with a deep nose, a steady pace and a calm, even working rhythm, finding the articles along the way.',
+ ['Lay the track, mark the start, place articles and age it as planned.','Run on the long line, staying behind the dog with a slack line.','Keep your pace matched to the dog’s, without pulling.','Reward at each article and at the end.','Write down wind, ground, age and result.'],
+ ['Head-up tracking','Skipping legs','Fast, sloppy pace','Handler steering'],
+ {lvn:{IGP1:'About 300 paces, aged at least 20 min, 2 articles. A 5 m tracking line is allowed from 2025.',IGP2:'About 400 paces, aged at least 30 min, 3 articles. Confirm leg and corner layout in the rulebook.',IGP3:'About 600 paces, aged at least 60 min, 3 articles, with cross-tracks. Confirm leg and corner layout in the rulebook.'}}),
+X('t_corners','T','Corners',IG,'Dog works the corner without overshooting, keeps the nose down and slows to confirm the turn.',
+ ['Start with a wide, gentle turn with food in the corner.','Tighten the angle to a true 90° over several sessions.','Lay food 3 paces past the turn to reward the correct line.','Fade the food and add wind and cover changes.'],
+ ['Overshooting','Circling','Head up at the turn']),
+X('t_articles','T','Article indication',IG,'Dog finds each article and indicates it (down, sit or stand per your training) without chewing or carrying it.',
+ ['Put an article by your dog’s food reward on a short track.','Reward a down or settle on the article.','Place articles at different positions: on, beside, in cover.','Fade the food and reward only on a clear indication.'],
+ ['Picking up the article','Overrunning','Indicating with no nose contact']),
+X('t_age','T','Aging, cross-tracks and distraction',['IGP2','IGP3'],'Dog stays on the original track through longer ageing, ground changes and cross-tracks laid by another person.',
+ ['Lengthen ageing in small steps (20 → 30 → 60 min).','Add a short cross-track by another person.','Vary ground: grass, gravel, edge of road.','Add wind and weather variety.'],
+ ['Switching to the cross-track','Losing the track on hard ground']),
+X('t_line','T','Line handling',IG,'Handler follows quietly, keeps the line slack and lets the dog work independently.',
+ ['Walk 10 m behind with the line loose in your hand.','Practise dropping the line slack on corners.','Rehearse flowing out the line as the dog works ahead.'],
+ ['Tight line','Stepping on the line','Pulling the dog back'],{lvn:{IGP1:'5 m line allowed from 2025.'}}),
+
+X('o_heel_leash','O','Heeling on leash',IG,'Dog at your left knee, attentive, leash slack, sits straight at halts.',
+ ['Build position at the stationary heel.','Add steps, halts and turns, rewarding the sit.','Add pace changes and the group.','Fade rewards, proof with distraction.'],
+ ['Forging or lagging','Wide turns','Looking away'],{v:true}),
+X('o_heel_free','O','Free heeling and gunshot',IG,'Same attentive position without the leash, including through the group and while two shots are fired. Dog stays unconcerned by the shots.',
+ ['Switch to a loose leash, then drop it.','Practise on-leash patterns off leash.','Pair distant shots with food, then bring them closer.','Combine pace changes with shots.'],
+ ['Gun sensitivity','Drifting wide','Sloppy sits']),
+X('o_sit','O','Sit out of motion',IG,'Dog sits on command while you keep walking, and stays until you return and release. The sit is 10 points.',
+ ['Teach a sit from standing, then from a slow walk.','Walk away for a few steps, return and reward.','Add distance and speed.','Proof with surroundings.'],
+ ['Dog following','Lying down','Anticipating the cue']),
+X('o_down_recall','O','Down with recall',IG,'Dog drops on command while you walk on, then comes in fast on the recall and sits in front.',
+ ['Drop a stationary dog, step away, return and reward.','Add walking away and turning to call.','Recall straight to the front, reward at the sit.','Add a finish and proof with distance.'],
+ ['Creeping','Slow recall','Crooked front']),
+X('o_stand_walk','O','Stand while walking',['IGP2'],'Dog stands on command as you keep walking and stays until you return. 10 points in the 2025 rules.',
+ ['Teach a solid stand while stationary.','Cue the stand from slow movement.','Walk away and return to reward.','Add distance and distractions.'],
+ ['Sitting or lying down','Walking forward','Anticipating']),
+X('o_stand_motion','O','Stand out of motion',['IGP3'],'Dog stands on command while you walk on, stays until you return, then continues.',
+ ['Rehearse stand as in IGP 2 but from faster movement.','Walk away and add distance steadily.','Return and reward while the dog holds position.'],
+ ['Sitting or lying down','Creeping']),
+X('o_retrieve_flat','O','Retrieve on the flat',IG,'Dog waits, retrieves on a throw, carries calmly and delivers to the front. In 2025, boxes are marked for the dumbbell position.',
+ ['Reward holding the dumbbell.','Add a short toss, send, and take.','Build to a clean front and hold.','Add distance and a final finish.'],
+ ['Mouthing','Dropping early','Anticipating the send'],
+ {lvn:{IGP1:'Dumbbell: 400 g.',IGP2:'Dumbbell: 600 g.',IGP3:'Dumbbell: 1000 g.'}}),
+X('o_hurdle','O','Hurdle (1 m)',IG,'Dog clears the 1 m hurdle cleanly on the way out and back. Retrieve over the hurdle was dropped for IGP 1 in 2025.',
+ ['Teach the jump on a low bar, then raise slowly.','Send the dog over and call it back.','Add a retrieve (levels where required).','Proof with different surfaces and weather.'],
+ ['Touching the hurdle','Cutting around','Stopping before the jump'],{v:true}),
+X('o_wall','O','Scaling wall (160 cm)',IG,'Dog climbs the A-frame style wall cleanly in both directions. The wall is 160 cm at all levels from 2025, and IGP 2 no longer has a retrieve over it.',
+ ['Start with a low ramp and treats.','Raise the wall in small steps.','Send up and call back.','Add distance and distractions.'],
+ ['Hesitating at the top','Jumping off early','Scrabbling'],{v:true}),
+X('o_sendout','O','Send-out and down',IG,'Dog runs straight away from you on command and drops on the next command, staying put until you return.',
+ ['Reward the dog running to a target.','Move the target farther away, then drop on command.','Fade the target, send to an empty spot.','Add distance and straightness checks.'],
+ ['Curving off line','Not dropping on the spot','Stopping short']),
+X('o_longdown','O','Long down under distraction',IG,'Dog holds a down while another dog works. In IGP 1 from 2025, the distance is 10 m and the handler may stand sideways.',
+ ['Build duration at your side first.','Add distance and handler movement.','Add another dog working nearby.','Practise handler out of sight (higher levels).'],
+ ['Breaking position','Creeping','Stress signals'],{v:true,lvn:{IGP1:'10 m distance, handler may stand sideways to the dog (2025).',IGP2:'Handler out of sight. Confirm details in the rulebook.',IGP3:'Handler out of sight. Confirm details in the rulebook.'}}),
+
+X('p_search','P','Blind search and hold-and-bark',IG,'Dog searches the blinds in order, finds the helper and barks steadily without biting, staying close.',
+ ['Always work with a qualified helper.','Show the dog how to circle a blind with food.','Teach hold-and-bark on a visible helper.','Fade visibility and add blinds.'],
+ ['Skipping a blind','Barking intermittently','Biting early'],
+ {v:true,lvn:{IGP1:'2 blinds in 2025.',IGP2:'6 blinds. Confirm layout in the diagram.',IGP3:'6 blinds. Confirm layout in the diagram.'}}),
+X('p_escape','P','Prevention of escape',IG,'Dog stops the helper’s escape attempt with a firm full grip, then stays calm after the out.',
+ ['Build grip quality in drive on a helper’s sleeve.','Rehearse short runs and early recalls.','Add distance and a calm release.','Proof by interrupting mid-run.'],
+ ['Hesitant entry','Partial grips','Chewing']),
+X('p_guard','P','Out and guarding',IG,'Dog releases on one command and watches the helper attentively without biting.',
+ ['Train the out in low drive.','Reward the out with a re-bite or toy.','Practise guarding with eye contact.','Add distance and distractions.'],
+ ['Slow outs','Barking during guard','Leaving position']),
+X('p_back','P','Back transport',IG,'Dog heels next to you behind the helper, attentive and stable, ready to react.',
+ ['Heel the dog behind a familiar helper.','Add speed changes and turns.','Add distractions around the dog.'],
+ ['Forging or lagging','Looking at the helper']),
+X('p_attack_trans','P','Defense against attack during transport',IG,'On the helper’s attack, the dog bites firmly and fully, then outs on command and guards.',
+ ['Rehearse with a helper who triggers drive calmly.','Reinforce the bite with a toy or sleeve.','Add speed, noise and a surprise start.'],
+ ['Hesitating','Weak grip','Dropping the bite']),
+X('p_defense_guard','P','Defense from guarding position',IG,'After guarding, the dog defends against a helper’s attack and stays out when released. In 2025 the helper walks away 20 steps afterward.',
+ ['Build a solid hold before introducing the attack.','Teach the out and a calm guard.','Practise the helper’s walk-away.'],
+ ['Pressure from the dog before the cue','Reacting too late'],{v:true}),
+X('p_courage','P','Courage test',IG,'Dog launches a long attack from the starting position on the helper, with a full grip and no hesitation.',
+ ['Build a full-speed bite on the helper in drive.','Add distance in small steps.','Practise with different helpers and locations.'],
+ ['Slow approach','Partial grip','Leaving before the bite'])
+];
+
+const DC=['#2F7D5B','#2D5E9E','#B0332A','#C77A12','#6D4C9F','#A3366F'];
+
+/* ====================== STATE & STORAGE ====================== */
+let S={v:1,dogs:[],sessions:[],media:{},exEdits:{},exRefs:{},custom:[],timers:[]};
+const U={tab:'session',lv:'IGP1',q:'',rv:'progress',rdog:'all',mk:'all',stack:[],adog:null,draft:null,pk:{sel:new Set(),lv:'IGP1',target:'draft',dogId:null},confirm:null};
+let db=null;const memMedia=new Map();let saveT=null;let AC=null;let wl=null;
+
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-4);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today=()=>new Date().toLocaleDateString('en-CA');
+const fmtDate=d=>{try{return new Date(d+'T12:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'})}catch(e){return d}};
+const fmtT=ms=>{const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),c=s%60,p=n=>String(n).padStart(2,'0');return (h?h+':'+p(m):String(m))+':'+p(c)};
+
+function openDB(){return new Promise(res=>{try{const r=indexedDB.open('trialbook',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('kv');d.createObjectStore('media',{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);r.onblocked=()=>res(null)}catch(e){res(null)}})}
+const tx=(store,mode,fn)=>new Promise(res=>{if(!db)return res(null);try{const t=db.transaction(store,mode);const rq=fn(t.objectStore(store));t.oncomplete=()=>res(rq&&rq.result!==undefined?rq.result:true);t.onerror=()=>res(null);t.onabort=()=>res(null)}catch(e){res(null)}});
+function save(){persist()}
+function persist(){clearTimeout(saveT);saveT=setTimeout(()=>{try{localStorage.setItem('trialbook-state',JSON.stringify(S))}catch(e){}tx('kv','readwrite',s=>s.put(JSON.parse(JSON.stringify(S)),'state'))},250)}
+async function load(){
+ db=await openDB();let st=null;
+ if(db)st=await tx('kv','readonly',s=>s.get('state'));
+ if(!st||st===true){try{const j=localStorage.getItem('trialbook-state');if(j)st=JSON.parse(j)}catch(e){}}
+ if(st&&typeof st==='object')S=Object.assign(S,st);
+ try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+}
+const mPut=async rec=>{if(db){const ok=await tx('media','readwrite',s=>s.put(rec));if(ok)return true}memMedia.set(rec.id,rec);return false};
+const mGet=async id=>{if(memMedia.has(id))return memMedia.get(id);return db?await tx('media','readonly',s=>s.get(id)):null};
+const mDel=async id=>{memMedia.delete(id);urlCache.delete(id);if(db)await tx('media','readwrite',s=>s.delete(id))};
+const urlCache=new Map();
+async function mUrl(id){if(urlCache.has(id))return urlCache.get(id);const r=await mGet(id);if(r&&r!==true&&r.blob){const u=URL.createObjectURL(r.blob);urlCache.set(id,u);return u}return null}
+
+const blobData=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)});
+async function exportAll(){
+ toast('Preparing backup…');S.settings=S.settings||{};S.settings.lastBackup=Date.now();persist();
+ const st=JSON.parse(JSON.stringify(S));delete st.sync;delete st.cloudOn;st.timers=[];
+ const out={app:'trialbook',v:1,state:st,media:{}};
+ for(const id of Object.keys(S.media)){const r=await mGet(id);if(r&&r!==true&&r.blob)out.media[id]={d:await blobData(r.blob)}}
+ const blob=new Blob([JSON.stringify(out)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='trialbook-backup-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);render();toast('Backup downloaded');
+}
+function importAll(){
+ pickFile('application/json,.json',null,f=>{const r=new FileReader();r.onload=()=>{let o;try{o=JSON.parse(r.result);if(o.app!=='trialbook'||!o.state)throw 0}catch(e){toast('That isn’t a Trialbook backup');return}
+  ask('Replace everything in this app with the backup?','Restore',async()=>{
+   toast('Restoring…');const keepMedia=Object.keys(S.media);for(const id of keepMedia)await mDel(id);
+   S=Object.assign({v:1,dogs:[],sessions:[],media:{},exEdits:{},custom:[],timers:[]},o.state);
+   for(const id of Object.keys(o.media||{})){try{const b=await (await fetch(o.media[id].d)).blob();await mPut({id,blob:b})}catch(e){}}
+   urlCache.clear();persist();applyTheme();U.stack=[];render();toast('Backup restored')})};r.readAsText(f)});
+}
+const APP_VERSION='1.1.0';
+function backupAge(){const t=S.settings&&S.settings.lastBackup;return t?Math.floor((Date.now()-t)/864e5):null}
+const agoLbl=n=>n===null?'never':n===0?'today':n===1?'yesterday':n+' days ago';
+function storageCard(){
+ const ms=Object.values(S.media);const bytes=ms.reduce((a,m)=>a+(m.size||0),0);const n=S.sessions.length;
+ return `<div class="card small"><b>Your data and backups</b><p class="muted" style="margin:4px 0 8px">Everything is stored in this browser on this device: ${n} session${n===1?'':'s'} and ${ms.length} photo${ms.length===1?'':'s'}, video${ms.length===1?'':'s'} and recording${ms.length===1?'':'s'} (${(bytes/1048576).toFixed(1)} MB). Clearing the browser’s site data deletes it.</p><p style="margin:0 0 8px"><b>Last backup:</b> ${agoLbl(backupAge())}</p><div class="row wrap"><button class="btn pri sm" data-a="bk-export">Download full backup</button><button class="btn sm" data-a="bk-file">Restore from file</button></div><p class="tiny muted" style="margin:10px 0 0">The backup file holds notes, plans, settings, photos, videos and voice memos. Trialbook v${APP_VERSION}</p></div>`;
+}
+function backupNudge(){
+ const age=backupAge();if(!S.dogs.length||Date.now()<((S.settings&&S.settings.snooze)||0))return'';
+ if(age===null?S.sessions.length<1:age<14)return'';
+ return `<div class="card hl"><b>Time for a backup</b><p class="small muted" style="margin:4px 0 10px">${age===null?'You haven’t backed up yet.':'Your last backup was '+age+' days ago.'} Your data lives only on this device.</p><div class="row"><button class="btn pri sm" data-a="bk-export">Download backup</button><button class="btn sm" data-a="bk-snooze">Remind me later</button></div></div>`;
+}
+
+/* ====================== HELPERS ====================== */
+const dog=id=>S.dogs.find(d=>d.id===id);
+const sess=id=>S.sessions.find(s=>s.id===id);
+const actS=()=>S.sessions.find(s=>s.status==='active');
+function allEx(){return BASE.map(e=>{const m=S.exEdits[e.id];return m?Object.assign({},e,m):e}).concat(S.custom||[])}
+const ex=id=>allEx().find(e=>e.id===id);
+const dotStyle=d=>`style="--dc:${d?d.color:'var(--primary)'}"`;
+const ico=(n,s=22)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${I[n]||''}</svg>`;
+const I={gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/>',timer:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/>',cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',vid:'<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M16 10l5-3v10l-5-3"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/>',note:'<path d="M5 3h10l4 4v14H5z"/><path d="M9 12h6M9 16h6"/>',plus:'<path d="M12 5v14M5 12h14"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',chev:'<path d="M9 5l7 7-7 7"/>',back:'<path d="M15 5l-7 7 7 7"/>',play:'<path d="M7 4l13 8-13 8z"/>',pause:'<path d="M8 5v14M16 5v14"/>',stop:'<rect x="6" y="6" width="12" height="12"/>',trash:'<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',edit:'<path d="M4 20l4-1 11-11-3-3L5 16z"/>',book:'<path d="M5 4h10a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h10"/>',dog:'<path d="M5 9l3-4 3 3h2l3-3 3 4-1 8a3 3 0 01-3 3H9a3 3 0 01-3-3z"/><circle cx="10" cy="12" r=".8"/><circle cx="14" cy="12" r=".8"/>',chart:'<path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3"/>',cal:'<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',reset:'<path d="M4 12a8 8 0 108-8M4 4v5h5"/>',flag:'<path d="M6 21V4M6 5h11l-2 4 2 4H6"/>'};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2600)}
+function ask(text,label,fn){U.confirm={text,label,fn};$('#modal').innerHTML=`<div class="box"><p style="font-size:17px">${esc(text)}</p><div class="row" style="gap:10px"><button class="btn" style="flex:1" data-a="cf-no">Cancel</button><button class="btn pri" style="flex:1" data-a="cf-ok">${esc(label)}</button></div></div>`;$('#modal').classList.add('on')}
+function closeAsk(){U.confirm=null;$('#modal').classList.remove('on')}
+
+function getLog(sid,dogId,exId,create){const s=sess(sid);if(!s)return null;s.logs=s.logs||[];let l=s.logs.find(x=>x.dogId===dogId&&x.exId===exId);if(!l&&create){l={id:uid(),dogId,exId,ts:Date.now(),ok:0,miss:0,rating:0,notes:'',times:[],mediaIds:[]};s.logs.push(l)}return l}
+function logsFor(dogId,exId){const out=[];S.sessions.forEach(s=>(s.logs||[]).forEach(l=>{if((dogId==='all'||l.dogId===dogId)&&(!exId||l.exId===exId))out.push(Object.assign({},l,{sid:s.id,date:s.date||''}))}));return out.sort((a,b)=>a.ts-b.ts)}
+const loggedDone=(s,dogId)=>(s.logs||[]).filter(l=>l.dogId===dogId&&(l.ok+l.miss>0||l.rating>0||l.notes||(l.mediaIds||[]).length)).length;
+
+/* ====================== MEDIA CAPTURE ====================== */
+function pickFile(accept,capture,cb){const i=document.createElement('input');i.type='file';i.accept=accept;if(capture)i.setAttribute('capture',capture);i.style.display='none';document.body.appendChild(i);i.onchange=()=>{const f=i.files&&i.files[0];i.remove();if(f)cb(f)};i.click()}
+async function shrink(file,max){try{const bmp=await createImageBitmap(file,{imageOrientation:'from-image'});const sc=Math.min(1,max/Math.max(bmp.width,bmp.height));const c=document.createElement('canvas');c.width=Math.round(bmp.width*sc);c.height=Math.round(bmp.height*sc);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);return await new Promise(r=>c.toBlob(b=>r(b||file),'image/jpeg',.85))}catch(e){return file}}
+async function attach(ctx,blob,kind,extra){
+ const id=uid();const meta={id,kind,mime:blob.type||'',size:blob.size||0,ts:Date.now(),sid:ctx.sid||null,dogId:ctx.dogId||null,exId:ctx.exId||null,cap:'',dur:(extra&&extra.dur)||0};
+ const persisted=await mPut({id,blob});S.media[id]=meta;
+ const s=ctx.sid&&sess(ctx.sid);
+ if(ctx.exId&&s){const l=getLog(ctx.sid,ctx.dogId,ctx.exId,true);l.mediaIds.push(id)}
+ else if(s){s.captured=s.captured||[];s.captured.push(id)}
+ save();render();toast(persisted?'Saved':'Saved for this visit only: storage is unavailable')}
+function capture(kind,ctx){
+ if(kind==='photo')pickFile('image/*','environment',async f=>{toast('Saving photo…');attach(ctx,await shrink(f,1600),'image')});
+ else if(kind==='video')pickFile('video/*','environment',f=>{toast('Saving video…');attach(ctx,f,'video')});
+ else if(kind==='audio')startRec(ctx);
+}
+const REC={mr:null,chunks:[],t0:0,ctx:null,iv:null,cancel:false};
+async function startRec(ctx){
+ const fallback=()=>pickFile('audio/*',null,f=>attach(ctx,f,'audio'));
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){toast('Recording isn’t available here. Pick a voice memo instead.');fallback();return}
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  const mime=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+  const mr=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);
+  REC.chunks=[];REC.cancel=false;REC.ctx=ctx;REC.mr=mr;REC.t0=Date.now();
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)REC.chunks.push(e.data)};
+  mr.onstop=()=>{stream.getTracks().forEach(t=>t.stop());clearInterval(REC.iv);$('#recbar').classList.remove('on');if(REC.cancel)return;const b=new Blob(REC.chunks,{type:mr.mimeType||mime||'audio/webm'});attach(REC.ctx,b,'audio',{dur:Math.round((Date.now()-REC.t0)/1000)})};
+  mr.start(1000);showRec();
+ }catch(e){toast('Microphone blocked. Pick a voice memo instead.');fallback()}
+}
+function showRec(){const b=$('#recbar');b.classList.add('on');const draw=()=>{b.innerHTML=`<span class="pulse"></span><b style="flex:1">Recording ${fmtT(Date.now()-REC.t0)}</b><button class="btn sm" style="color:#B0332A;background:#fff" data-a="rec-stop">Stop and save</button><button class="btn sm" style="background:transparent;color:#fff;border-color:#fff" data-a="rec-cancel">Discard</button>`};draw();clearInterval(REC.iv);REC.iv=setInterval(draw,500)}
+
+/* ====================== TIMERS ====================== */
+const tEl=t=>t.acc+(t.run?Date.now()-t.start:0);
+const tShow=t=>fmtT(t.mode==='down'?Math.max(0,t.dur-tEl(t)):tEl(t));
+function unlockAudio(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){}}
+function beep(){try{unlockAudio();[0,.35,.7].forEach(d=>{const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;g.gain.value=.25;o.connect(g);g.connect(AC.destination);o.start(AC.currentTime+d);o.stop(AC.currentTime+d+.22)})}catch(e){}try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
+async function wake(){try{const need=S.timers.some(t=>t.run)||actS();if(need&&!wl&&navigator.wakeLock){wl=await navigator.wakeLock.request('screen');wl.addEventListener('release',()=>{wl=null})}else if(!need&&wl){wl.release();wl=null}}catch(e){}}
+function addTimer(mode,min,label){unlockAudio();const d=dog(U.adog);const t={id:uid(),mode,dur:Math.round((min||0)*60000),acc:0,start:0,run:false,done:false,label:label||(mode==='up'?'Stopwatch':(min<1?Math.round(min*60)+' s':min+' min'))};if(d&&actS())t.label=d.name+' · '+t.label;S.timers.unshift(t);save();render()}
+function tick(){
+ let dirty=false;
+ S.timers.forEach(t=>{if(t.run&&t.mode==='down'&&tEl(t)>=t.dur){t.run=false;t.acc=t.dur;t.done=true;dirty=true;beep();toast('Timer done: '+t.label)}});
+ $$('[data-tm]').forEach(e=>{const t=S.timers.find(x=>x.id===e.dataset.tm);if(t)e.textContent=tShow(t)});
+ $$('[data-clock]').forEach(e=>{const s=actS();if(s)e.textContent=fmtT(Date.now()-(s.startedAt||Date.now()))});
+ const run=S.timers.filter(t=>t.run);const f=$('#tfab');
+ f.innerHTML=ico('timer',24)+(run.length?`<span>${tShow(run.sort((a,b)=>(a.mode==='down'?a.dur-tEl(a):1e12)-(b.mode==='down'?b.dur-tEl(b):1e12))[0])}</span>`:'');
+ if(dirty){save();wake();if(U.stack.length&&U.stack[U.stack.length-1].t==='timers')renderSheets()}
+}
+
+/* ====================== SHELLS / SHARED UI ====================== */
+const shell=(title,body,o={})=>`<div class="sheet" data-sh="${o.t||''}"><div class="shead"><button class="ibtn" data-a="close" aria-label="Back">${ico(o.x?'x':'back')}</button><h2>${title}</h2><div class="row">${o.right||''}</div></div><div class="sbody">${body}</div>${o.foot?`<div class="sfoot">${o.foot}</div>`:''}</div>`;
+const dogChips=(ids,cur,act,extra)=>`<div class="chips">${ids.map(id=>{const d=dog(id);if(!d)return'';return `<button class="chip ${cur===id?'on':''}" ${dotStyle(d)} data-a="${act}" data-id="${id}">${mark(d)}${esc(d.name)}${extra?extra(id):''}</button>`}).join('')}</div>`;
+const mediaGrid=ids=>{ids=(ids||[]).filter(i=>S.media[i]);if(!ids.length)return'';return `<div class="media">${ids.map(i=>{const m=S.media[i];const inner=m.kind==='image'?`<img data-mid="${i}" alt="Photo">`:m.kind==='video'?`<video data-mid="${i}" muted playsinline preload="metadata"></video>`:`<span>${ico('mic',30)}</span>`;return `<button class="mth" data-a="m-open" data-id="${i}" aria-label="Open ${m.kind}">${inner}<span class="k">${m.kind==='audio'?'Voice '+fmtT((m.dur||0)*1000):m.kind==='video'?'Video':'Photo'}</span></button>`}).join('')}</div>`};
+const exBody=(e,lv)=>`<p>${esc(e.std)}</p>${e.pts?`<p class="small muted">Points: ${esc(e.pts)}</p>`:''}${lv&&e.lvn&&e.lvn[lv]?`<div class="hl small"><b>${LVN[lv]}:</b> ${esc(e.lvn[lv])}</div>`:''}${e.v?`<p class="tiny muted" style="margin-top:8px">Confirm wording and points against your rulebook; the 2025 changes touched this exercise.</p>`:''}`;
+const stepsHtml=e=>`<ol>${(e.steps||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ol>`;
+const faultsHtml=e=>`<ul>${(e.faults||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ul>${e.mine?`<p class="small"><b>My cues:</b> ${esc(e.mine)}</p>`:''}`;
+
+
+/* ====================== AVATARS, DIAGRAMS, REFERENCES ====================== */
+const avatar=(d,sz)=>`<span class="av" style="--dc:${d&&d.color||'var(--primary)'};width:${sz}px;height:${sz}px;font-size:${Math.round(sz*.5)}px">${esc(((d&&d.name)||'?').trim().charAt(0).toUpperCase())}${d&&d.photoId&&S.media[d.photoId]?`<img data-mid="${d.photoId}" alt="">`:''}</span>`;
+const mark=d=>d&&d.photoId&&S.media[d.photoId]?avatar(d,26):'<span class="dot"></span>';
+async function addRole(role,o,blob,kind){const id=uid();S.media[id]={id,kind,mime:blob.type||'',size:blob.size||0,ts:Date.now(),role,sid:null,dogId:o.dogId||null,exId:o.exId||null,cap:'',dur:0};await mPut({id,blob});if(role==='ref'){S.exRefs=S.exRefs||{};(S.exRefs[o.exId]=S.exRefs[o.exId]||[]).push(id)}save();render();return id}
+const refBlock=id=>`<div><h3 style="margin:6px 0 8px">My reference photos and videos</h3>${mediaGrid((S.exRefs||{})[id])||'<p class="small muted">Add photos or clips of how you want this to look.</p>'}<div class="row wrap" style="margin-top:8px"><button class="btn sm" data-a="ref-add" data-k="image" data-id="${id}">${ico('cam',18)} Add photo</button><button class="btn sm" data-a="ref-add" data-k="video" data-id="${id}">${ico('vid',18)} Add video</button></div></div>`;
+
+const AR='<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>';
+const LEGS='<circle cx="14" cy="12" r="5" fill="var(--ink)"/><text x="23" y="15.5">Handler</text><ellipse cx="76" cy="12" rx="7" ry="4.5" fill="var(--primary)"/><text x="87" y="15.5">Dog</text>';
+const LEGH='<rect x="116" y="7" width="10" height="10" rx="2" fill="var(--P)"/><text x="131" y="15.5">Helper</text>';
+const fig=(inner,cap,o={})=>`<figure class="fig"><svg class="dsv" viewBox="0 0 320 ${o.h||170}" role="img" aria-label="${esc(cap)}">${AR}${o.noLeg?'':LEGS+(o.helper?LEGH:'')}${inner}</svg><figcaption>${esc(cap)}</figcaption></figure>`;
+const gH=(x,y)=>`<circle cx="${x}" cy="${y}" r="7" fill="var(--ink)"/>`;
+const gD=(x,y,flat)=>`<ellipse cx="${x}" cy="${y}" rx="${flat?11:9}" ry="${flat?4:5.5}" fill="var(--primary)"/>`;
+const gE=(x,y)=>`<rect x="${x-7}" y="${y-7}" width="14" height="14" rx="2" fill="var(--P)"/>`;
+const gT=(x,y,t,a)=>`<text x="${x}" y="${y}" text-anchor="${a||'middle'}">${esc(t)}</text>`;
+const gP=(d,o={})=>`<path d="${d}" fill="none" stroke="${o.c||'var(--muted)'}" stroke-width="${o.w||2}" ${o.solid?'':'stroke-dasharray="5 4"'} ${o.noArrow?'':'marker-end="url(#ar)"'} stroke-linecap="round" stroke-linejoin="round"/>`;
+const flagG=(x,y)=>`<path d="M${x} ${y}V${y-24}" stroke="var(--ink)" stroke-width="2"/><path d="M${x} ${y-24}h13l-3 5 3 5h-13z" fill="var(--accent)"/>`;
+const art=(x,y)=>`<rect x="${x-5}" y="${y-3}" width="10" height="6" rx="1.5" fill="var(--accent)"/>`;
+const SCH=' Schematic, not to scale.';
+const HELP=' Set helper work up with your helper and trainer.';
+const DG={};
+DG.heelpos=()=>fig(`<rect x="196" y="22" width="30" height="108" rx="6" fill="var(--ink)" opacity=".28"/><line x1="8" y1="130" x2="312" y2="130" stroke="var(--line)" stroke-width="2"/><ellipse cx="178" cy="98" rx="38" ry="17" fill="var(--primary)"/><circle cx="224" cy="84" r="12" fill="var(--primary)"/><ellipse cx="240" cy="90" rx="9" ry="5" fill="var(--primary)"/><path d="M156 114V130M200 114V130M142 92L126 78" stroke="var(--primary)" stroke-width="5" stroke-linecap="round"/><line x1="211" y1="30" x2="211" y2="130" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 3"/>${gT(110,44,'Dog’s shoulder level with your left knee')}${gP('M150 50L205 74')}`,'Heel position, seen from the handler’s left. The dog is tight to your leg with its head up and eyes on you.',{noLeg:1,h:150});
+DG.heelpat=bh=>bh?fig(`${gP('M40 110H285',{solid:1})}${gH(40,110)}${gD(40,95)}<path d="M105 100V120" stroke="var(--accent)" stroke-width="2"/>${gT(105,136,'Halt, dog sits')}${gT(210,136,'Slow · normal · fast')}${gT(165,70,'Straight line with halts and pace changes')}`,'BH leash heeling (2025): straight lines with halts and pace changes, no left or right turns.'+SCH)
+ :fig(`${gP('M40 140H140V80H250',{solid:1})}${gP('M250 80C272 80 272 108 250 108H200')}${gH(40,140)}${gD(40,125)}<path d="M80 132V148" stroke="var(--accent)" stroke-width="2"/>${gT(80,162,'Halt, dog sits')}${gT(150,162,'Left turn','start')}${gT(140,70,'Right turn')}${gT(286,100,'About turn')}`,'Heeling pattern with halts, left, right and about turns, then through a group.'+SCH);
+DG.heel=bh=>DG.heelpos()+DG.heelpat(bh);
+DG.oom=v=>{const t={sit:'Sit',down:'Down',stand:'Stand'}[v];return fig(`${gP('M30 120H250',{solid:1})}${gH(30,120)}${gD(30,104)}${gD(120,104,v==='down')}${gT(120,88,t+' on cue, dog stays')}<path d="M120 112V130" stroke="var(--accent)" stroke-width="2"/>${gT(190,112,'Keep walking')}${gP('M250 120C246 158 150 156 128 118')}${gT(190,168,'Return to the dog’s right side')}`,t+' out of motion: the dog stays where it is while you keep walking, then you return.'+SCH)};
+DG.downrecall=()=>fig(`${gP('M30 120H250',{solid:1})}${gH(30,120)}${gD(30,104)}${gD(100,104,true)}${gT(100,90,'Down')}<path d="M100 112V130" stroke="var(--accent)" stroke-width="2"/>${gH(250,120)}${gP('M114 104H226',{c:'var(--accent)',solid:1})}${gT(170,96,'Recall')}${gT(250,142,'Front sit')}`,'Down with recall: drop the dog on the move, walk on and turn, then call it straight in to a front sit.'+SCH);
+DG.recall=()=>fig(`${gD(60,100)}${gT(60,124,'Sit')}${gH(250,100)}${gP('M74 100H234',{c:'var(--accent)',solid:1})}${gT(160,92,'Comes straight and fast')}${gT(250,124,'Front sit')}`,'Recall: the dog comes straight in and sits in front.'+SCH);
+DG.retr=()=>fig(`<rect x="214" y="78" width="46" height="34" rx="3" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="3 3"/>${gT(237,126,'Marked box')}${art(237,95)}${gH(50,142)}${gD(50,126)}${gP('M58 134C90 56 190 54 232 88',{c:'var(--accent)'})}${gT(118,52,'Throw')}${gP('M64 122C110 110 170 104 208 100')}${gT(126,106,'Out on command',)}${gP('M204 112C170 128 110 138 70 134')}${gT(140,150,'Back, front, finish')}`,'Retrieve on the flat: the dumbbell lands in the marked box (2025), the dog goes out and returns to a front.'+SCH);
+DG.send=()=>fig(`${gH(160,152)}${gD(160,136)}${gP('M160 126V44',{c:'var(--accent)',solid:1})}${gT(176,88,'Straight line away','start')}${gD(160,32,true)}${gT(180,35,'Drops on command','start')}`,'Send-out: the dog runs straight away from you, then drops on command and stays.'+SCH);
+DG.longdown=()=>fig(`${gD(60,120,true)}${gT(60,108,'Dog stays down')}${gH(250,130)}${gT(250,152,'Handler away')}<ellipse cx="170" cy="62" rx="9" ry="5.5" fill="var(--muted)"/>${gH(150,66)}${gP('M180 62H236',{noArrow:0})}${gT(190,46,'Another team works nearby')}`,'Long down under distraction: the dog holds the down while another dog works.'+SCH);
+DG.hurdle=()=>fig(`<line x1="10" y1="140" x2="310" y2="140" stroke="var(--line)" stroke-width="2"/><rect x="148" y="80" width="24" height="60" fill="var(--O)" opacity=".75"/><path d="M40 140Q160 -30 280 140" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ar)"/>${gD(160,56)}<line x1="186" y1="80" x2="186" y2="140" stroke="var(--accent)" stroke-width="1.5"/>${gT(192,114,'100 cm','start')}`,'Hurdle (1 m), side view. The dog clears it cleanly without touching.'+SCH,{noLeg:1,h:150});
+DG.wall=()=>fig(`<line x1="10" y1="140" x2="310" y2="140" stroke="var(--line)" stroke-width="2"/><polygon points="90,140 140,44 180,44 230,140" fill="var(--O)" opacity=".55"/><path d="M62 132L136 36H184L258 132" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ar)"/>${gD(160,34)}<text x="160" y="108" text-anchor="middle" style="fill:var(--ink);font-weight:600">160 cm</text>`,'Scaling wall (A-frame), side view. 160 cm at all levels from 2025. The dog goes up one side and down the other.'+SCH,{noLeg:1,h:150});
+DG.search=lv=>{const two=lv==='IGP1';const pts=two?[[56,70],[264,70]]:[[56,44],[56,86],[56,128],[264,44],[264,86],[264,128]];const bl=pts.map((p,i)=>`<rect x="${p[0]-12}" y="${p[1]-12}" width="24" height="24" rx="4" fill="var(--surface2)" stroke="var(--muted)" stroke-width="1.5"/>${gT(p[0],p[1]+3.5,String(i+1))}`).join('');const l=pts[pts.length-1];return fig(`<rect x="24" y="26" width="272" height="132" rx="6" fill="none" stroke="var(--line)" stroke-width="1.5"/>${bl}${gE(l[0],l[1])}${gH(160,148)}${gD(160,132)}${gP('M152 128L'+(pts[0][0]+16)+' '+(pts[0][1]+12))}`,(two?'IGP 1: 2 blinds (2025).':'IGP 2–3: 6 blinds.')+' The dog searches the blinds in order and finds the helper in the last one.'+SCH+' Confirm layout against the rulebook diagram.',{helper:1})};
+DG.escape=()=>fig(`${gE(240,60)}${gP('M240 72C250 100 270 118 292 126',{c:'var(--P)'})}${gT(240,46,'Helper tries to escape')}${gH(52,146)}${gD(70,130)}${gP('M82 128C150 98 230 100 284 122',{c:'var(--primary)',solid:1})}${gT(150,92,'Dog stops the escape')}`,'Prevention of escape: the dog intercepts the helper with a firm full grip.'+SCH+HELP,{helper:1});
+DG.guard=()=>fig(`${gE(210,70)}${gD(210,104)}${gT(210,128,'Dog watches, no bite')}${gH(60,146)}${gT(60,166,'Handler waits')}`,'Out and guarding: the dog releases on one command, then watches the helper attentively.'+SCH+HELP,{helper:1});
+DG.back=()=>fig(`${gE(230,100)}${gP('M240 100H296',{c:'var(--P)'})}${gH(110,106)}${gD(110,91)}${gP('M122 106H190')}${gT(160,132,'Dog heels beside you, behind the helper')}`,'Back transport: the helper walks ahead while the dog heels with you, attentive and stable.'+SCH+HELP,{helper:1});
+DG.attack=()=>fig(`${gH(90,116)}${gD(90,101)}${gE(200,108)}${gP('M190 104L116 98',{c:'var(--P)'})}${gT(155,86,'Helper attacks the dog')}${gT(160,150,'Dog bites firmly, outs on command, guards')}`,'Defense against an attack during transport.'+SCH+HELP,{helper:1});
+DG.defguard=()=>fig(`${gE(210,80)}${gD(160,80)}${gH(60,140)}${gP('M222 80H296',{c:'var(--P)'})}${gT(264,68,'Helper moves away')}${gT(264,100,'(IGP 1: 20 steps)')}${gT(160,60,'Guarding position')}`,'Defense from the guarding position. From 2025 in IGP 1 the helper walks 20 steps away afterward.'+SCH+HELP,{helper:1});
+DG.courage=()=>fig(`${gH(26,104)}${gD(44,90)}${gE(290,90)}${gP('M56 90H266',{c:'var(--primary)',solid:1})}${gP('M286 100L270 104',{c:'var(--P)'})}${gT(160,80,'Dog meets the helper at full speed')}`,'Courage test: a long, committed run and a full grip.'+SCH+HELP,{helper:1});
+const TRK={IGP1:{p:'M50 140H220V50',a:[[135,140],[220,92]],t:'About 300 paces, aged 20 min, 2 articles',y:140},IGP2:{p:'M50 150H150V95H260V40',a:[[100,150],[205,95],[260,68]],t:'About 400 paces, aged 30 min, 3 articles',y:150},IGP3:{p:'M50 152H120V104H190V54H280',a:[[85,152],[190,80],[245,54]],t:'About 600 paces, aged 60 min, 3 articles, cross-tracks',y:152}};
+DG.track=lv=>{lv=IG.includes(lv)?lv:'IGP1';const T=TRK[lv];return fig(`${flagG(50,T.y)}${gH(24,T.y)}${gD(40,T.y-12)}${gP(T.p,{c:'var(--T)',w:3,solid:1})}${T.a.map(a=>art(a[0],a[1])).join('')}${lv==='IGP3'?gP('M70 44L250 138',{c:'var(--accent)',noArrow:1})+gT(230,150,'Cross-track'):''}`,T.t+'. Leg count and angles are illustrative: confirm the layout in the rulebook.'+SCH)};
+DG.start=()=>fig(`${flagG(90,120)}<circle cx="104" cy="122" r="16" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 3"/>${gD(106,126)}${gH(40,126)}${gP('M47 126H92',{solid:1,noArrow:1})}${gT(104,102,'Scent area',)}${gT(200,126,'Slack line, dog settles, then search','start')}${gP('M122 122H190')}`,'Start: the dog takes the scent calmly at the start flag, then begins working.'+SCH);
+DG.corner=()=>fig(`${gP('M40 130H170V40',{c:'var(--T)',w:3,solid:1})}${gD(150,122)}${[100,80,60].map(y=>`<circle cx="170" cy="${y}" r="3" fill="var(--accent)"/>`).join('')}${gT(184,80,'Food after the turn','start')}${gT(184,128,'Slow, nose down','start')}`,'Corner: the dog slows, stays nose down and follows the new line without overshooting.'+SCH);
+DG.article=()=>fig(`${gP('M30 100H290',{c:'var(--T)',w:3,solid:1,noArrow:1})}${art(180,100)}${gD(168,114,true)}${gT(180,134,'Dog indicates with nose on the article')}${gH(60,130)}${gP('M66 126L130 108',{solid:0})}`,'Article indication: the dog finds the article and indicates it without chewing or carrying it.'+SCH);
+DG.line=lv=>fig(`${gH(50,110)}${gD(270,110)}${gP('M57 110C120 152 200 152 262 112',{solid:1,noArrow:1})}${gT(160,150,(lv==='IGP1'?'10 m line (5 m allowed from 2025)':'10 m line'))+gT(160,92,'Line kept slack')}`,'Line handling: you follow behind and let the dog work independently.'+SCH);
+function diagFor(e,lv){const m={b_heel:()=>DG.heel(true),o_heel_leash:()=>DG.heel(),o_heel_free:()=>DG.heel(),b_sitdown:()=>DG.oom('sit'),o_sit:()=>DG.oom('sit'),o_stand_walk:()=>DG.oom('stand'),o_stand_motion:()=>DG.oom('stand'),b_recall:DG.recall,o_down_recall:DG.downrecall,o_retrieve_flat:DG.retr,o_hurdle:DG.hurdle,o_wall:DG.wall,o_sendout:DG.send,o_longdown:DG.longdown,t_start:DG.start,t_track:()=>DG.track(lv),t_corners:DG.corner,t_articles:DG.article,t_age:()=>DG.track('IGP3'),t_line:()=>DG.line(lv),p_search:()=>DG.search(lv),p_escape:DG.escape,p_guard:DG.guard,p_back:DG.back,p_attack_trans:DG.attack,p_defense_guard:DG.defguard,p_courage:DG.courage};const f=m[e.id];return f?f():''}
+
+/* ====================== VIEWS ====================== */
+function ringAv(d){const st=dogStats(d.id);const f=Math.min(1,st.week/st.goal),C=131.9;return `<span class="ring" title="${esc(d.name)}: ${st.week} of ${st.goal} days this week"><svg viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r="21" fill="none" stroke="currentColor" stroke-opacity=".28" stroke-width="4"/><circle cx="25" cy="25" r="21" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(f*C).toFixed(1)} ${C}" transform="rotate(-90 25 25)"/></svg>${avatar(d,34)}</span>`}
+function hero(){const h=new Date().getHours();const g=h<12?'Good morning':h<18?'Good afternoon':'Good evening';
+ return `<div class="hero"><div class="row sb" style="align-items:flex-start"><div><div class="small" style="opacity:.85">${g} · ${fmtDate(today())}</div><h2>${S.dogs.length?'Ready to train?':'Welcome to Trialbook'}</h2></div><div class="row" style="gap:4px">${S.dogs.slice(0,4).map(ringAv).join('')}</div></div><button class="btn hb big" data-a="plan-new" style="margin-top:14px">${ico('plus')} Plan or start a session</button></div>`}
+/* ---- theme ---- */
+const PRESETS={spruce:{n:'Spruce',p:'#1F4D3F',a:'#D9480F'},ocean:{n:'Ocean',p:'#1C4E80',a:'#E8890C'},ember:{n:'Ember',p:'#9A3412',a:'#0F766E'},plum:{n:'Plum',p:'#5B2A86',a:'#D97706'},slate:{n:'Slate',p:'#334155',a:'#E11D48'},field:{n:'Field gold',p:'#7A5C12',a:'#1D6F5B'}};
+const h2r=h=>{h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');return [0,2,4].map(i=>parseInt(h.substr(i,2),16))};
+const r2h=a=>'#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
+const mixc=(a,b,t)=>{const x=h2r(a),y=h2r(b);return r2h(x.map((v,i)=>v+(y[i]-v)*t))};
+const lumc=h=>{const [r,g,b]=h2r(h).map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*r+.7152*g+.0722*b};
+const themeObj=()=>{S.settings=S.settings||{};S.settings.theme=S.settings.theme||{preset:'spruce',mode:'auto'};return S.settings.theme};
+function themeBase(){const t=(S.settings&&S.settings.theme)||{};if(t.preset==='custom')return {p:t.p||PRESETS.spruce.p,a:t.a||PRESETS.spruce.a};return PRESETS[t.preset]||PRESETS.spruce}
+function applyTheme(){
+ const t=(S.settings&&S.settings.theme)||{};const mode=t.mode||'auto';const root=document.documentElement;
+ if(mode==='auto')root.removeAttribute('data-theme');else root.setAttribute('data-theme',mode);
+ const dark=mode==='dark'||(mode==='auto'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+ const b=themeBase();let p=b.p,a=b.a;if(dark){p=mixc(p,'#ffffff',.42);a=mixc(a,'#ffffff',.22)}
+ root.style.setProperty('--primary',p);root.style.setProperty('--accent',a);
+ root.style.setProperty('--onprimary',lumc(p)>.4?'#10201A':'#FFFFFF');root.style.setProperty('--onaccent',lumc(a)>.4?'#1A0B02':'#FFFFFF');
+ let m=document.querySelector('meta[name="theme-color"]');if(!m){m=document.createElement('meta');m.name='theme-color';document.head.appendChild(m)}
+ m.content=dark?'#0E1512':'#EFF2EE';
+}
+function setCustom(k,v){const t=themeObj();if(t.preset!=='custom'){const b=themeBase();t.p=b.p;t.a=b.a;t.preset='custom'}t[k]=v;applyTheme();save()}
+const TABS=[['session','Session','cal'],['lib','Library','book'],['dogs','Dogs','dog'],['review','Review','chart']];
+const LOGO_MARK=`<svg class="mark" viewBox="0 0 512 512" width="30" height="30" aria-hidden="true"><rect width="512" height="512" rx="112" fill="var(--primary)"/><g fill="var(--onprimary)"><ellipse cx="150" cy="238" rx="31" ry="42" transform="rotate(-24 150 238)"/><ellipse cx="220" cy="170" rx="33" ry="46" transform="rotate(-8 220 170)"/><ellipse cx="292" cy="170" rx="33" ry="46" transform="rotate(8 292 170)"/><ellipse cx="362" cy="238" rx="31" ry="42" transform="rotate(24 362 238)"/><path d="M256 262c-52 0-92 48-92 92 0 38 30 50 58 40 20-7 56-7 76 0 28 10 58-2 58-40 0-44-40-92-100-92z"/></g><path d="M206 356h50v-40h52" fill="none" stroke="var(--accent)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/><circle cx="308" cy="316" r="13" fill="var(--accent)"/></svg>`;
+function renderHdr(){const a=actS();const t={session:'Session',lib:'Exercise library',dogs:'Dogs',review:'Review'}[U.tab];$('#hdr').innerHTML=`<div class="brand">${LOGO_MARK}<h1>${t}</h1></div><div class="row" style="gap:4px">${a?`<span class="live">● <span data-clock>${fmtT(Date.now()-(a.startedAt||Date.now()))}</span></span>`:''}<button class="ibtn" data-a="theme" aria-label="Appearance">${ico('gear')}</button></div>`}
+function renderNav(){$('#nav').innerHTML=TABS.map(([k,l,i])=>`<button class="${U.tab===k?'on':''}" data-a="tab" data-v="${k}"><span class="ic">${ico(i)}</span>${l}</button>`).join('')}
+
+function viewSession(){
+ const a=actS();if(a)return viewActive(a);
+ if(!S.dogs.length)return `<div class="empty"><h2>Add your first dog</h2><p>Plans, notes, photos and voice memos are all kept per dog.</p><button class="btn pri big" data-a="tab" data-v="dogs">Add a dog</button></div>`;
+ const planned=S.sessions.filter(s=>s.status==='planned').sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+ const recent=S.sessions.filter(s=>s.status==='done').sort((a,b)=>(b.endedAt||0)-(a.endedAt||0)).slice(0,4);
+ const row=s=>`<button class="item" data-a="${s.status==='done'?'sdet':'plan-open'}" data-id="${s.id}"><div class="grow"><b>${esc(s.title||'Training')}</b><span class="muted small">${fmtDate(s.date)}${s.place?' · '+esc(s.place):''}</span><div class="row wrap" style="margin-top:6px">${(s.dogIds||[]).map(id=>{const d=dog(id);return d?`<span class="row" ${dotStyle(d)} style="gap:5px">${mark(d)}<span class="small">${esc(d.name)}</span></span>`:''}).join('')}</div></div>${ico('chev')}</button>`;
+ return `<div class="pad">${hero()}${backupNudge()}${dueCard()}
+ ${planned.length?`<div><h3 style="margin-bottom:8px">Planned</h3><div class="list">${planned.map(row).join('')}</div></div>`:''}
+ ${recent.length?`<div><h3 style="margin-bottom:8px">Recent</h3><div class="list">${recent.map(row).join('')}</div></div>`:''}
+ ${!planned.length&&!recent.length?`<div class="card"><p><b>How a session works</b></p><p class="small muted" style="margin:0">Plan the focus for each dog, start the session to run exercises with reminders, counters, a timer and capture, then review notes, photos, videos and voice memos later.</p></div>`:''}</div>`;
+}
+
+function viewActive(s){
+ if(!s.dogIds.includes(U.adog))U.adog=s.dogIds[0];
+ const d=dog(U.adog);const plan=(s.plan&&s.plan[U.adog])||[];
+ const extra=(s.logs||[]).filter(l=>l.dogId===U.adog&&!plan.some(p=>p.exId===l.exId));
+ const items=plan.map(p=>({exId:p.exId,goal:p.goal})).concat(extra.map(l=>({exId:l.exId,goal:'',added:true})));
+ const card=it=>{const e=ex(it.exId);if(!e)return'';const l=getLog(s.id,U.adog,it.exId);const done=l&&(l.ok+l.miss>0||l.rating>0);
+  return `<button class="item ${e.ph}" data-a="drill" data-id="${it.exId}"><div class="grow"><b>${esc(e.name)}</b>${it.goal?`<span class="small">${esc(it.goal)}</span>`:`<span class="small muted">${PH[e.ph]}${it.added?' · added':''}</span>`}${l&&done?`<span class="small" style="color:var(--ok)">✓ ${l.ok}  <span style="color:var(--bad)">✗ ${l.miss}</span>${l.rating?'  ·  rated '+l.rating+'/5':''}</span>`:''}</div>${done?`<span style="color:var(--ok)">${ico('check')}</span>`:ico('chev')}</button>`};
+ const cap=(s.captured||[]).filter(i=>S.media[i]&&S.media[i].dogId===U.adog);
+ const notes=(s.notes||[]).filter(n=>n.dogId===U.adog);
+ return `<div class="pad">
+ <div><div class="small muted" style="margin-bottom:4px">${esc(s.title||'Training')}</div>${dogChips(s.dogIds,U.adog,'s-dog',id=>`<span class="tiny muted">${loggedDone(s,id)}/${((s.plan&&s.plan[id])||[]).length||'·'}</span>`)}</div>
+ ${d&&d.nextUp?`<div class="hl small"><b>From last time:</b> ${esc(d.nextUp)}</div>`:''}
+ <div><h3 class="row" style="margin-bottom:8px">${d?avatar(d,34):''}Focus for ${esc(d?d.name:'')}</h3><div class="list">${items.map(card).join('')||'<p class="muted small">No exercises yet. Add some below.</p>'}</div></div>
+ <button class="btn" data-a="s-add">${ico('plus')} Add exercise</button>
+ <div><h3 style="margin-bottom:8px">Capture for ${esc(d?d.name:'')}</h3><div class="caps">
+  <button data-a="s-cap" data-k="photo">${ico('cam')}Photo</button><button data-a="s-cap" data-k="video">${ico('vid')}Video</button><button data-a="s-cap" data-k="audio">${ico('mic')}Voice</button><button data-a="s-note">${ico('note')}Note</button></div></div>
+ ${cap.length?mediaGrid(cap):''}
+ ${notes.length?`<div class="list">${notes.map(n=>`<div class="card small">${n.exId&&ex(n.exId)?`<span class="tag ${ex(n.exId).ph}" style="margin-right:6px">${esc(ex(n.exId).name)}</span>`:''}${esc(n.text)}<div class="tiny muted" style="margin-top:4px">${new Date(n.ts).toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})}</div></div>`).join('')}</div>`:''}
+ <button class="btn pri big" data-a="end">${ico('flag')} End session</button></div>`;
+}
+
+function libList(){
+ const q=U.q.trim().toLowerCase();
+ const list=allEx().filter(e=>e.lv.includes(U.lv)&&(!q||e.name.toLowerCase().includes(q)));
+ if(!list.length)return `<p class="muted">No exercises match.</p>`;
+ return PHO.map(ph=>{const g=list.filter(e=>e.ph===ph);if(!g.length)return'';return `<div><h3 style="margin-bottom:8px"><span class="tag ${ph}">${PH[ph]}</span></h3><div class="list">${g.map(e=>`<button class="item ${ph}" data-a="ex" data-id="${e.id}"><div class="grow"><b>${esc(e.name)}</b><span class="small muted">${esc(e.std.length>90?e.std.slice(0,88).trim()+'…':e.std)}</span></div>${ico('chev')}</button>`).join('')}</div></div>`}).join('');
+}
+function viewLib(){return `<div class="pad"><div class="seg">${LV.map(l=>`<button class="${U.lv===l?'on':''}" data-a="lv" data-v="${l}">${LVN[l]}</button>`).join('')}</div>
+ <input class="inp" type="search" placeholder="Search exercises" value="${esc(U.q)}" data-f="lib-q" aria-label="Search exercises">
+ <div id="libList" class="pad">${libList()}</div>
+ <div class="row wrap"><button class="btn sm" data-a="ex-new">${ico('plus',18)} New exercise</button><button class="btn sm" data-a="about">About this library</button></div></div>`}
+
+function viewDogs(){
+ const st=Object.values(S.media).reduce((a,m)=>a+(m.size||0),0);
+ return `<div class="pad">${S.dogs.length?`<div class="list">${S.dogs.map(d=>{const n=S.sessions.filter(s=>s.status==='done'&&(s.dogIds||[]).includes(d.id)).length;return `<button class="item" data-a="dog-edit" data-id="${d.id}">${avatar(d,48)}<div class="grow"><b>${esc(d.name)}</b><span class="small muted">${esc(d.breed||'Dog')} · working toward ${LVN[d.level]||''} · ${n} session${n===1?'':'s'}</span></div>${ico('chev')}</button>`}).join('')}</div>`:`<div class="empty"><h2>No dogs yet</h2><p>Add each dog you train. You can run several dogs in the same session.</p></div>`}
+ <button class="btn pri big" data-a="dog-new">${ico('plus')} Add a dog</button>
+ ${goalsCard()}${storageCard()}</div>`;
+}
+
+function barsFor(logs,ph){const r=logs.filter(l=>l.rating).slice(-8);if(!r.length)return `<span class="tiny muted">not rated</span>`;return `<div class="bars" style="--bc:var(--${ph})">${r.map(l=>`<i style="height:${l.rating*20}%"></i>`).join('')}</div>`}
+function viewReview(){
+ const dogs=[{id:'all',name:'All dogs',color:'var(--primary)'}].concat(S.dogs);
+ const chips=`<div class="chips">${dogs.map(d=>`<button class="chip ${U.rdog===d.id?'on':''}" style="--dc:${d.color}" data-a="rdog" data-id="${d.id}">${mark(d)}${esc(d.name)}</button>`).join('')}</div>`;
+ const seg=`<div class="seg">${[['progress','Progress'],['calendar','Calendar'],['sessions','Sessions'],['media','Media']].map(([k,l])=>`<button class="${U.rv===k?'on':''}" data-a="rv" data-v="${k}">${l}</button>`).join('')}</div>`;
+ let body='';
+ if(U.rv==='progress'){
+  const logs=logsFor(U.rdog);const ids=[...new Set(logs.map(l=>l.exId))].filter(i=>ex(i));
+  body=ids.length?PHO.map(ph=>{const g=ids.map(ex).filter(e=>e.ph===ph);if(!g.length)return'';return `<div><h3 style="margin-bottom:8px"><span class="tag ${ph}">${PH[ph]}</span></h3><div class="list">${g.map(e=>{const ls=logsFor(U.rdog,e.id);const ok=ls.reduce((a,l)=>a+l.ok,0),mi=ls.reduce((a,l)=>a+l.miss,0);const last=[...ls].reverse().find(l=>l.rating);return `<button class="item ${ph}" data-a="exhist" data-id="${e.id}"><div class="grow"><b>${esc(e.name)}</b><span class="small muted">${ls.length} log${ls.length===1?'':'s'}${ok+mi?` · ${Math.round(ok/(ok+mi)*100)}% good reps`:''}${last?` · last ${last.rating}/5`:''}</span></div>${barsFor(ls,ph)}</button>`}).join('')}</div></div>`}).join(''):`<div class="empty"><h2>Nothing logged yet</h2><p>Run a session and log exercises to see progress here.</p></div>`;
+ }else if(U.rv==='calendar'){
+  body=calView();
+ }else if(U.rv==='sessions'){
+  const ss=S.sessions.filter(s=>U.rdog==='all'||(s.dogIds||[]).includes(U.rdog)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.startedAt||0)-(a.startedAt||0));
+  body=ss.length?`<div class="list">${ss.map(s=>`<button class="item" data-a="sdet" data-id="${s.id}"><div class="grow"><b>${esc(s.title||'Training')}</b><span class="small muted">${fmtDate(s.date)} · ${s.status}${s.place?' · '+esc(s.place):''}</span><span class="small">${(s.dogIds||[]).map(id=>dog(id)?esc(dog(id).name):'').join(', ')} · ${(s.logs||[]).length} logged</span></div>${ico('chev')}</button>`).join('')}</div>`:`<div class="empty"><h2>No sessions yet</h2></div>`;
+ }else{
+  const ms=Object.values(S.media).filter(m=>!m.role&&(U.rdog==='all'||m.dogId===U.rdog)&&(U.mk==='all'||m.kind===U.mk)).sort((a,b)=>b.ts-a.ts);
+  body=`<div class="seg">${[['all','All'],['image','Photos'],['video','Videos'],['audio','Voice']].map(([k,l])=>`<button class="${U.mk===k?'on':''}" data-a="mk" data-v="${k}">${l}</button>`).join('')}</div>${ms.length?mediaGrid(ms.map(m=>m.id)):`<div class="empty"><h2>No media yet</h2><p>Photos, videos and voice memos you capture show up here.</p></div>`}`;
+ }
+ return `<div class="pad">${S.dogs.length?chips:''}${seg}${body}</div>`;
+}
+const VIEWS={session:viewSession,lib:viewLib,dogs:viewDogs,review:viewReview};
+
+/* ====================== SHEETS ====================== */
+const SH={};
+SH.plan=()=>{
+ const D=U.draft;
+ const blocks=D.dogIds.map(id=>{const d=dog(id);const items=D.plan[id]||[];const prev=S.sessions.filter(s=>s.status==='done'&&s.plan&&s.plan[id]&&s.plan[id].length).sort((a,b)=>(b.endedAt||0)-(a.endedAt||0))[0];
+  return `<div class="card"><div class="row sb"><h3 class="row" ${dotStyle(d)}>${mark(d)}${esc(d.name)}</h3><span class="tiny muted">${LVN[d.level]||''}</span></div>
+  ${d.nextUp?`<div class="hl small" style="margin:10px 0"><b>Last time you wrote:</b> ${esc(d.nextUp)}</div>`:''}
+  <div class="list" style="margin:10px 0">${items.map((it,i)=>{const e=ex(it.exId);return e?`<div class="card ${e.ph}" style="padding:10px"><div class="row sb"><b>${esc(e.name)}</b><button class="ibtn" style="width:36px;height:36px" data-a="pl-rm" data-d="${id}" data-i="${i}" aria-label="Remove">${ico('x',18)}</button></div><input class="inp" style="margin-top:6px" placeholder="Goal for today (optional)" value="${esc(it.goal)}" data-f="pl-goal" data-d="${id}" data-i="${i}"></div>`:''}).join('')}</div>
+  <div class="row wrap"><button class="btn sm" data-a="pl-add" data-d="${id}">${ico('plus',18)} Add exercises</button>${prev?`<button class="btn sm" data-a="pl-repeat" data-d="${id}">Repeat last focus</button>`:''}</div></div>`}).join('');
+ return shell(D.id?'Edit session':'New session',`
+ <div class="fld"><label class="lbl">Title</label><input class="inp" value="${esc(D.title)}" data-f="pl-title" placeholder="e.g. Saturday field work"></div>
+ <div class="row"><div class="fld" style="flex:1"><label class="lbl">Date</label><input class="inp" type="date" value="${esc(D.date)}" data-f="pl-date"></div><div class="fld" style="flex:1"><label class="lbl">Place</label><input class="inp" value="${esc(D.place)}" data-f="pl-place" placeholder="Field, club…"></div></div>
+ <div><label class="lbl">Dogs in this session</label><div class="chips">${S.dogs.map(d=>`<button class="chip ${D.dogIds.includes(d.id)?'on':''}" ${dotStyle(d)} data-a="pl-dog" data-id="${d.id}">${mark(d)}${esc(d.name)}</button>`).join('')}</div></div>
+ ${blocks||'<p class="muted small">Pick one or more dogs to plan each dog’s focus.</p>'}`,
+ {t:'plan',foot:`<button class="btn" data-a="pl-save">Save plan</button><button class="btn pri" data-a="pl-start">${ico('play',18)} Start now</button>`});
+};
+SH.pick=()=>{
+ const P=U.pk;const list=allEx().filter(e=>e.lv.includes(P.lv));
+ const body=`<div class="seg">${LV.map(l=>`<button class="${P.lv===l?'on':''}" data-a="pick-lv" data-v="${l}">${LVN[l]}</button>`).join('')}</div>`+PHO.map(ph=>{const g=list.filter(e=>e.ph===ph);return g.length?`<div><h3 style="margin-bottom:8px"><span class="tag ${ph}">${PH[ph]}</span></h3><div class="list">${g.map(e=>`<button class="item ${ph}" data-a="pick-t" data-id="${e.id}"><div class="grow"><b>${esc(e.name)}</b></div><span style="width:26px;height:26px;border-radius:8px;border:2px solid var(--${ph});display:inline-flex;align-items:center;justify-content:center;color:var(--${ph})">${P.sel.has(e.id)?ico('check',18):''}</span></button>`).join('')}</div></div>`:''}).join('');
+ return shell('Add exercises',body,{t:'pick',foot:`<button class="btn pri" data-a="pick-ok" ${P.sel.size?'':'disabled'}>Add ${P.sel.size||''} exercise${P.sel.size===1?'':'s'}</button>`});
+};
+SH.drill=p=>{
+ const e=ex(p.exId),s=sess(p.sid),d=dog(p.dogId);if(!e||!s||!d)return shell('Exercise','<p>Not found.</p>',{t:'drill'});
+ const l=getLog(p.sid,p.dogId,p.exId)||{ok:0,miss:0,rating:0,notes:'',times:[],mediaIds:[]};
+ const plan=((s.plan&&s.plan[p.dogId])||[]).find(x=>x.exId===p.exId);
+ return shell(esc(e.name),`
+ ${dogChips(s.dogIds,p.dogId,'drill-dog')}
+ <div class="row wrap"><span class="tag ${e.ph}">${PH[e.ph]}</span>${plan&&plan.goal?`<span class="small"><b>Goal:</b> ${esc(plan.goal)}</span>`:''}</div>
+ <details><summary>The standard</summary><div class="dbody">${exBody(e,d.level)}</div></details>
+ <details open><summary>How it’s done</summary><div class="dbody">${stepsHtml(e)}</div></details>
+ <details><summary>Common faults</summary><div class="dbody">${faultsHtml(e)}</div></details>
+ <details><summary>Diagram and my references</summary><div class="dbody">${diagFor(e,d.level)||'<p class="small muted">No diagram for this exercise.</p>'}${refBlock(e.id)}</div></details>
+ <div class="counters"><button class="cnt ok" data-a="rep" data-k="ok" data-n="1"><span class="n">${l.ok}</span><span class="l">Good rep</span></button><button class="cnt bad" data-a="rep" data-k="miss" data-n="1"><span class="n">${l.miss}</span><span class="l">Miss</span></button></div>
+ <div class="row"><button class="btn sm" data-a="rep" data-k="ok" data-n="-1">− good</button><button class="btn sm" data-a="rep" data-k="miss" data-n="-1">− miss</button><span class="grow"></span><button class="btn sm" data-a="timers">${ico('timer',18)} Timer</button></div>
+ ${(l.times||[]).length?`<div class="row wrap">${l.times.map((t,i)=>`<button class="chip" style="min-height:36px" data-a="time-rm" data-i="${i}" aria-label="Remove time">${fmtT(t*1000)} ${ico('x',14)}</button>`).join('')}</div>`:''}
+ <div><label class="lbl">Rating: 1 lost · 3 shaky · 5 trial-ready</label><div class="rate">${[1,2,3,4,5].map(n=>`<button class="${l.rating===n?'on':''}" data-a="rate" data-v="${n}">${n}</button>`).join('')}</div></div>
+ <div class="fld"><label class="lbl">Notes</label><textarea class="ta" data-f="log-notes" placeholder="What happened, what to change next time">${esc(l.notes)}</textarea></div>
+ <div class="caps" style="grid-template-columns:repeat(3,1fr)"><button data-a="d-cap" data-k="photo">${ico('cam')}Photo</button><button data-a="d-cap" data-k="video">${ico('vid')}Video</button><button data-a="d-cap" data-k="audio">${ico('mic')}Voice memo</button></div>
+ ${mediaGrid(l.mediaIds)}`,{t:'drill',foot:`<button class="btn pri" data-a="close">Done</button>`});
+};
+SH.ex=p=>{const e=ex(p.id);if(!e)return shell('Exercise','');return shell(esc(e.name),`<div class="row wrap"><span class="tag ${e.ph}">${PH[e.ph]}</span>${e.lv.map(l=>`<span class="tag n">${LVN[l]}</span>`).join('')}</div>${exBody(e,U.lv)}${diagFor(e,U.lv)}<h3>How it’s done</h3>${stepsHtml(e)}<h3>Common faults</h3>${faultsHtml(e)}${refBlock(e.id)}`,{t:'ex',right:`<button class="btn sm" data-a="ex-edit" data-id="${e.id}">${ico('edit',16)} Edit</button>`})};
+SH.exedit=p=>{const e=ex(p.id);const cu=(S.custom||[]).some(c=>c.id===p.id);return shell('Edit exercise',`
+ ${cu?`<div class="fld"><label class="lbl">Name</label><input class="inp" data-f="ee-name" value="${esc(e.name)}"></div><div class="fld"><label class="lbl">Phase</label><select class="sel" data-f="ee-ph">${PHO.map(k=>`<option value="${k}" ${e.ph===k?'selected':''}>${PH[k]}</option>`).join('')}</select></div><div><label class="lbl">Levels</label><div class="chips">${LV.map(l=>`<button class="chip ${e.lv.includes(l)?'on':''}" data-a="ee-lv" data-v="${l}">${LVN[l]}</button>`).join('')}</div></div>`:''}
+ <div class="fld"><label class="lbl">The standard</label><textarea class="ta" data-f="ee-std">${esc(e.std)}</textarea></div>
+ <div class="fld"><label class="lbl">Points (from your rulebook)</label><input class="inp" data-f="ee-pts" value="${esc(e.pts)}" placeholder="e.g. 10"></div>
+ <div class="fld"><label class="lbl">Steps, one per line</label><textarea class="ta" style="min-height:160px" data-f="ee-steps">${esc((e.steps||[]).join('\n'))}</textarea></div>
+ <div class="fld"><label class="lbl">Common faults, one per line</label><textarea class="ta" data-f="ee-faults">${esc((e.faults||[]).join('\n'))}</textarea></div>
+ <div class="fld"><label class="lbl">My cues and reminders</label><textarea class="ta" data-f="ee-mine">${esc(e.mine||'')}</textarea></div>
+ ${cu?`<button class="btn warn" data-a="ee-del">Delete exercise</button>`:(S.exEdits[p.id]?`<button class="btn" data-a="ee-reset">${ico('reset',18)} Reset to built-in</button>`:'')}`,{t:'exedit',foot:`<button class="btn pri" data-a="close">Done</button>`})};
+SH.dog=p=>{const d=p.draft;return shell(p.isNew?'Add a dog':'Edit dog',`
+ <div class="row" style="gap:14px">${avatar(d,92)}<div class="list" style="gap:8px"><button class="btn sm" data-a="dg-photo">${ico('cam',18)} ${d.photoId?'Change photo':'Add photo'}</button>${d.photoId?'<button class="btn sm" data-a="dg-photo-rm">Remove photo</button>':''}</div></div>
+ <div class="fld"><label class="lbl">Name</label><input class="inp" data-f="dg-name" value="${esc(d.name)}"></div>
+ <div class="fld"><label class="lbl">Breed</label><input class="inp" data-f="dg-breed" value="${esc(d.breed||'')}"></div>
+ <div class="fld"><label class="lbl">Date of birth</label><input class="inp" type="date" data-f="dg-dob" value="${esc(d.dob||'')}"></div>
+ <div><label class="lbl">Working toward</label><div class="seg">${LV.map(l=>`<button class="${d.level===l?'on':''}" data-a="dg-lv" data-v="${l}">${LVN[l]}</button>`).join('')}</div></div>
+ <div><label class="lbl">Colour</label><div class="chips">${DC.map(c=>`<button class="chip ${d.color===c?'on':''}" style="--dc:${c}" data-a="dg-col" data-v="${c}" aria-label="Colour"><span class="dot" style="width:20px;height:20px"></span></button>`).join('')}</div></div>
+ <div class="fld"><label class="lbl">Notes (drive, quirks, goals)</label><textarea class="ta" data-f="dg-notes">${esc(d.notes||'')}</textarea></div>
+ ${p.isNew?'':`<button class="btn warn" data-a="dog-del">Delete dog and their logs</button>`}`,{t:'dog',foot:`<button class="btn pri" data-a="dog-save">Save dog</button>`})};
+SH.snote=p=>shell('Quick note',`<div class="fld"><label class="lbl">Note for ${esc((dog(p.dogId)||{}).name||'')}</label><textarea class="ta" id="snta" style="min-height:160px" placeholder="What you saw, what to try next"></textarea></div><div class="fld"><label class="lbl">Tag an exercise (optional)</label><select class="sel" id="snex"><option value="">No exercise</option>${exOpts(p.dogId)}</select></div>`,{t:'snote',x:1,foot:`<button class="btn pri" data-a="sn-save">Save note</button>`});
+/* ---- training calendar, streaks and nudges ---- */
+const DAYMS=864e5;const pad2=n=>String(n).padStart(2,'0');
+const ymd=d=>d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+const parseD=x=>new Date(x+'T12:00');
+const addDays=(x,n)=>{const d=parseD(x);d.setDate(d.getDate()+n);return ymd(d)};
+const daysAgo=x=>Math.round((parseD(today()).getTime()-parseD(x).getTime())/DAYMS);
+const monday=x=>{const d=parseD(x);d.setDate(d.getDate()-((d.getDay()+6)%7));return ymd(d)};
+const cfg=()=>({goal:(S.settings&&S.settings.goal)||3,stale:(S.settings&&S.settings.stale)||14});
+const trainSess=id=>S.sessions.filter(s=>(s.status==='done'||s.status==='active')&&s.date&&(id==='all'||(s.dogIds||[]).includes(id)));
+function dogStats(id){
+ const days=[...new Set(trainSess(id).map(s=>s.date))].sort();const goal=cfg().goal;
+ const wk=monday(today());const cnt={};days.forEach(d=>{const k=monday(d);cnt[k]=(cnt[k]||0)+1});
+ let w=wk;if(!cnt[w])w=addDays(w,-7);let streak=0;while(cnt[w]){streak++;w=addDays(w,-7)}
+ const last=days[days.length-1];
+ return {total:days.length,last,since:last?daysAgo(last):null,week:cnt[wk]||0,goal,streak};
+}
+function staleEx(id){
+ const m={};logsFor(id).forEach(l=>{if(l.date&&(!m[l.exId]||l.date>m[l.exId]))m[l.exId]=l.date});
+ return Object.keys(m).filter(k=>ex(k)).map(k=>({id:k,since:daysAgo(m[k])})).filter(x=>x.since>=cfg().stale).sort((a,b)=>b.since-a.since);
+}
+const agoTxt=n=>n===0?'today':n===1?'yesterday':n+' days ago';
+const pipsHtml=st=>`<span class="pips" aria-label="${st.week} of ${st.goal} training days this week">${Array.from({length:Math.max(st.goal,st.week)},(_,i)=>`<i class="${i<st.week?'f':''}"></i>`).join('')}</span>`;
+function dueCard(){
+ const rows=S.dogs.map(d=>{const st=dogStats(d.id);if(!st.total)return'';const stale=staleEx(d.id);
+  return `<div class="card"><div class="row sb"><span class="row" style="gap:8px">${avatar(d,34)}<b>${esc(d.name)}</b></span>${pipsHtml(st)}</div><p class="small muted" style="margin:6px 0 0">Last trained ${agoTxt(st.since)} · ${st.week} of ${st.goal} days this week${st.streak>1?' · '+st.streak+'-week streak':''}</p>${stale.length?`<p class="small" style="margin:8px 0">Not practised lately: ${stale.slice(0,4).map(x=>esc(ex(x.id).name)+' ('+x.since+' d)').join(', ')}</p><button class="btn sm" data-a="due-plan" data-id="${d.id}">Plan these for ${esc(d.name)}</button>`:''}</div>`}).join('');
+ return rows?`<div><h3 style="margin-bottom:8px">This week</h3><div class="list">${rows}</div></div>`:'';
+}
+function goalsCard(){const c=cfg();const seg=(arr,cur,a)=>`<div class="seg">${arr.map(n=>`<button class="${cur===n?'on':''}" data-a="${a}" data-v="${n}">${n}</button>`).join('')}</div>`;
+ return `<div class="card small"><b>Training goals</b><p class="muted" style="margin:4px 0 8px">Training days per week, per dog</p>${seg([2,3,4,5],c.goal,'set-goal')}<p class="muted" style="margin:12px 0 8px">Flag exercises not practised for this many days</p>${seg([7,14,21,30],c.stale,'set-stale')}</div>`}
+function calView(){
+ const now=new Date();U.cal=U.cal||{y:now.getFullYear(),m:now.getMonth()};const {y,m}=U.cal;
+ const lead=(new Date(y,m,1).getDay()+6)%7,dim=new Date(y,m+1,0).getDate();
+ const by={};trainSess(U.rdog).forEach(s=>{(by[s.date]=by[s.date]||[]).push(s)});
+ let cells=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>`<span class="hd">${x}</span>`).join('');
+ for(let i=0;i<lead;i++)cells+='<span></span>';
+ for(let d=1;d<=dim;d++){const ds=y+'-'+pad2(m+1)+'-'+pad2(d);const l=by[ds]||[];const ids=[...new Set(l.flatMap(s=>s.dogIds||[]))].filter(id=>U.rdog==='all'||id===U.rdog).slice(0,4);
+  cells+=`<button class="cday ${ds===today()?'today':''}" ${l.length?`data-a="day" data-id="${ds}"`:'disabled'} aria-label="${fmtDate(ds)}${l.length?', trained':''}"><span>${d}</span><span class="cdots">${ids.map(id=>`<i style="background:${(dog(id)||{}).color||'var(--primary)'}"></i>`).join('')}</span></button>`}
+ const dogs=U.rdog==='all'?S.dogs:S.dogs.filter(d=>d.id===U.rdog);
+ const stats=dogs.map(d=>{const st=dogStats(d.id);return `<div class="card"><div class="row sb"><span class="row" style="gap:8px">${avatar(d,30)}<b>${esc(d.name)}</b></span>${pipsHtml(st)}</div><div class="row wrap" style="gap:18px;margin-top:8px"><div><div class="stat">${st.week}/${st.goal}</div><div class="tiny muted">days this week</div></div><div><div class="stat">${st.streak}</div><div class="tiny muted">week streak</div></div><div><div class="stat">${st.total}</div><div class="tiny muted">days trained</div></div><div><div class="stat">${st.last?agoTxt(st.since):'never'}</div><div class="tiny muted">last trained</div></div></div></div>`}).join('');
+ return `${stats}<div class="row sb"><button class="ibtn" data-a="cal-nav" data-v="-1" aria-label="Previous month">${ico('back')}</button><h3>${new Date(y,m,1).toLocaleDateString(undefined,{month:'long',year:'numeric'})}</h3><button class="ibtn" data-a="cal-nav" data-v="1" aria-label="Next month">${ico('chev')}</button></div><div class="cal">${cells}</div><p class="tiny muted" style="margin:0">A week streak counts consecutive weeks (Monday to Sunday) with at least one training day. Set your weekly goal on the Dogs tab.</p>`;
+}
+SH.day=p=>{const l=trainSess(U.rdog).filter(s=>s.date===p.ds);return shell(fmtDate(p.ds),`<div class="list">${l.map(s=>`<button class="item" data-a="sdet" data-id="${s.id}"><div class="grow"><b>${esc(s.title||'Training')}</b><span class="small muted">${(s.dogIds||[]).map(id=>dog(id)?esc(dog(id).name):'').join(', ')} · ${(s.logs||[]).length} logged${s.place?' · '+esc(s.place):''}</span></div>${ico('chev')}</button>`).join('')||'<p class="muted">No sessions.</p>'}</div>`,{t:'day'})};
+function taggedNotes(id){const out=[];S.sessions.forEach(s=>(s.notes||[]).forEach(n=>{if(n.exId===id&&(U.rdog==='all'||n.dogId===U.rdog))out.push({n,s})}));return out.map(({n,s})=>`<div class="card"><div class="row sb"><b>${fmtDate(s.date)}</b><span class="small muted">${dog(n.dogId)?esc(dog(n.dogId).name):''}</span></div><p class="small" style="margin:6px 0 0">${esc(n.text)}</p></div>`).join('')}
+function exOpts(dogId){const d=dog(dogId),s=actS();const pl=((s&&s.plan&&s.plan[dogId])||[]).map(x=>x.exId);const all=allEx().filter(e=>!d||e.lv.includes(d.level));const ord=pl.map(ex).filter(Boolean).concat(all.filter(e=>!pl.includes(e.id)));return ord.map(e=>`<option value="${e.id}">${esc(e.name)} (${PH[e.ph]})</option>`).join('')}
+/* ---- dictation (speech to text) ---- */
+const DICT={rec:null,id:null,base:'',fin:''};
+function stopDict(){try{DICT.rec&&DICT.rec.stop()}catch(e){}}
+function addDictation(){
+ if(DICT.rec&&!document.getElementById(DICT.id))stopDict();
+ $$('#sheets textarea.ta').forEach(t=>{if(t.dataset.dd)return;t.dataset.dd='1';if(!t.id)t.id='ta-'+(t.dataset.f||'x')+'-'+(t.dataset.d||'');
+  const b=document.createElement('button');b.type='button';b.className='btn sm dict'+(DICT.id===t.id?' live':'');b.dataset.a='dictate';b.dataset.t=t.id;b.style.alignSelf='flex-start';b.style.marginTop='6px';b.innerHTML=ico(DICT.id===t.id?'stop':'mic',16)+(DICT.id===t.id?' Stop':' Dictate');t.insertAdjacentElement('afterend',b)});
+}
+function dictBtns(){$$('[data-a="dictate"]').forEach(b=>{const on=DICT.id===b.dataset.t;b.classList.toggle('live',on);b.innerHTML=ico(on?'stop':'mic',16)+(on?' Stop':' Dictate')})}
+function dictate(el){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;const id=el.dataset.t;
+ if(DICT.rec&&DICT.id===id){stopDict();return}
+ if(DICT.rec)stopDict();
+ if(REC.mr&&REC.mr.state==='recording'){toast('Stop the voice memo first');return}
+ if(!SR){toast('Dictation isn’t available here. Use the microphone key on your phone keyboard.');return}
+ const t=document.getElementById(id);if(!t)return;
+ const r=new SR();r.lang=navigator.language||'en-CA';r.continuous=true;r.interimResults=true;
+ DICT.rec=r;DICT.id=id;DICT.base=t.value+(t.value&&!/\s$/.test(t.value)?' ':'');DICT.fin='';
+ r.onresult=ev=>{let interim='';for(let i=ev.resultIndex;i<ev.results.length;i++){const tr=ev.results[i][0].transcript;if(ev.results[i].isFinal)DICT.fin+=tr+' ';else interim+=tr}
+  const tx=document.getElementById(DICT.id);if(tx){tx.value=DICT.base+DICT.fin+interim;tx.dispatchEvent(new Event('input',{bubbles:true}))}};
+ r.onerror=ev=>{if(ev.error==='not-allowed'||ev.error==='service-not-allowed')toast('Dictation is blocked here. Use the microphone key on your keyboard.');else if(ev.error!=='no-speech'&&ev.error!=='aborted')toast('Dictation stopped: '+ev.error)};
+ r.onend=()=>{DICT.rec=null;DICT.id=null;dictBtns()};
+ try{r.start();dictBtns()}catch(e){DICT.rec=null;DICT.id=null;toast('Couldn’t start dictation')}
+}
+SH.theme=()=>{const t=themeObj();const b=themeBase();
+ return shell('Appearance',`<div><label class="lbl">Mode</label><div class="seg">${[['auto','Auto'],['light','Light'],['dark','Dark']].map(([k,l])=>`<button class="${(t.mode||'auto')===k?'on':''}" data-a="th-mode" data-v="${k}">${l}</button>`).join('')}</div></div>
+ <div><label class="lbl">Colour theme</label><div class="sw">${Object.entries(PRESETS).map(([k,v])=>`<button class="swb ${t.preset===k?'on':''}" data-a="th-pre" data-v="${k}"><i style="background:${v.p}"></i><i style="background:${v.a}"></i>${v.n}</button>`).join('')}</div></div>
+ <div class="card"><b>Your own colours</b><div class="row" style="gap:18px;margin-top:10px"><label class="small muted">Main<br><input type="color" data-f="th-p" value="${b.p}" aria-label="Main colour"></label><label class="small muted">Accent<br><input type="color" data-f="th-a" value="${b.a}" aria-label="Accent colour"></label></div><p class="tiny muted" style="margin:10px 0 0">Main colours the header, buttons and highlights. Accent colours the timer button and small markers. Dark mode lightens them automatically.</p></div>
+ <div class="hero"><div class="small" style="opacity:.85">Preview</div><h2>Ready to train?</h2><button class="btn hb big" style="margin-top:12px" data-a="close">Looks good</button></div>
+ <button class="btn" data-a="th-reset">${ico('reset',18)} Reset to default</button>`,{t:'theme'})};
+SH.wrap=p=>{const s=sess(p.sid);return shell('Wrap up',`${s.dogIds.map(id=>{const d=dog(id);if(!d)return'';const w=(s.wrap&&s.wrap[id])||{};return `<div class="card"><h3 class="row" ${dotStyle(d)}>${mark(d)}${esc(d.name)}</h3><p class="small muted" style="margin:6px 0">${loggedDone(s,id)} exercise${loggedDone(s,id)===1?'':'s'} logged</p><label class="lbl">Overall</label><div class="rate">${[1,2,3,4,5].map(n=>`<button class="${w.rating===n?'on':''}" data-a="wr-rate" data-d="${id}" data-v="${n}">${n}</button>`).join('')}</div><div class="fld" style="margin-top:10px"><label class="lbl">What went well</label><textarea class="ta" style="min-height:70px" data-f="wr-good" data-d="${id}">${esc(w.good||'')}</textarea></div><div class="fld" style="margin-top:10px"><label class="lbl">Work on next time</label><textarea class="ta" style="min-height:70px" data-f="wr-next" data-d="${id}">${esc(w.next||'')}</textarea></div></div>`}).join('')}
+ <div class="fld"><label class="lbl">Session notes (weather, ground, helper, anything else)</label><textarea class="ta" data-f="wr-sess">${esc(s.sessNote||'')}</textarea></div>`,{t:'wrap',foot:`<button class="btn pri" data-a="wr-finish">${ico('check',18)} Finish session</button>`})};
+SH.sdet=p=>{const s=sess(p.id);if(!s)return shell('Session','');
+ const body=`<div class="muted small">${fmtDate(s.date)}${s.place?' · '+esc(s.place):''} · ${s.status}</div>
+ ${(s.dogIds||[]).map(id=>{const d=dog(id);if(!d)return'';const ls=(s.logs||[]).filter(l=>l.dogId===id);const w=(s.wrap&&s.wrap[id])||{};const cap=(s.captured||[]).filter(i=>S.media[i]&&S.media[i].dogId===id);const ns=(s.notes||[]).filter(n=>n.dogId===id);
+  return `<div class="card"><h3 class="row" ${dotStyle(d)}>${mark(d)}${esc(d.name)}${w.rating?` <span class="muted small">· ${w.rating}/5</span>`:''}</h3>
+  ${ls.map(l=>{const e=ex(l.exId);if(!e)return'';return `<div style="margin-top:12px"><span class="tag ${e.ph}">${esc(e.name)}</span> <span class="small">✓ ${l.ok} ✗ ${l.miss}${l.rating?' · '+l.rating+'/5':''}${(l.times||[]).length?' · '+l.times.map(t=>fmtT(t*1000)).join(', '):''}</span>${l.notes?`<p class="small" style="margin:6px 0 0">${esc(l.notes)}</p>`:''}${mediaGrid(l.mediaIds)?`<div style="margin-top:8px">${mediaGrid(l.mediaIds)}</div>`:''}</div>`}).join('')||'<p class="small muted">No exercises logged.</p>'}
+  ${ns.map(n=>`<p class="small" style="margin:10px 0 0"><b>Note${n.exId&&ex(n.exId)?' · '+esc(ex(n.exId).name):''}:</b> ${esc(n.text)}</p>`).join('')}${cap.length?`<div style="margin-top:8px">${mediaGrid(cap)}</div>`:''}
+  ${w.good?`<p class="small" style="margin:10px 0 0"><b>Went well:</b> ${esc(w.good)}</p>`:''}${w.next?`<p class="small" style="margin:6px 0 0"><b>Next time:</b> ${esc(w.next)}</p>`:''}</div>`}).join('')}
+ ${s.sessNote?`<div class="card small"><b>Session notes</b><p style="margin:4px 0 0">${esc(s.sessNote)}</p></div>`:''}
+ <button class="btn warn" data-a="s-del" data-id="${s.id}">Delete session</button>`;
+ return shell(esc(s.title||'Session'),body,{t:'sdet'})};
+SH.exhist=p=>{const e=ex(p.id);const ls=logsFor(U.rdog,p.id).reverse();return shell(esc(e?e.name:'History'),ls.map(l=>{const d=dog(l.dogId);return `<div class="card ${e?e.ph:''}"><div class="row sb"><b>${fmtDate(l.date)}</b><span class="small muted">${d?esc(d.name):''}</span></div><div class="small">✓ ${l.ok} ✗ ${l.miss}${l.rating?' · rated '+l.rating+'/5':''}${(l.times||[]).length?' · '+l.times.map(t=>fmtT(t*1000)).join(', '):''}</div>${l.notes?`<p class="small" style="margin:6px 0 0">${esc(l.notes)}</p>`:''}${mediaGrid(l.mediaIds)?`<div style="margin-top:8px">${mediaGrid(l.mediaIds)}</div>`:''}</div>`}).join('')+taggedNotes(p.id)||'<p class="muted">No logs yet.</p>',{t:'exhist'})};
+SH.media=p=>{const m=S.media[p.id];if(!m)return shell('Media','<p>Not found.</p>');const d=dog(m.dogId),e=ex(m.exId);
+ const el=m.kind==='image'?`<img data-mid="${m.id}" style="width:100%;border-radius:12px" alt="Photo">`:m.kind==='video'?`<video data-mid="${m.id}" controls playsinline style="width:100%;border-radius:12px;background:#000"></video>`:`<audio data-mid="${m.id}" controls style="width:100%"></audio>`;
+ return shell(m.kind==='image'?'Photo':m.kind==='video'?'Video':'Voice memo',`${el}<div class="small muted">${new Date(m.ts).toLocaleString()}${d?' · '+esc(d.name):''}${e?' · '+esc(e.name):''}</div><div class="fld"><label class="lbl">Caption</label><input class="inp" data-f="m-cap" data-id="${m.id}" value="${esc(m.cap||'')}" placeholder="Add a caption"></div><button class="btn warn" data-a="m-del" data-id="${m.id}">${ico('trash',18)} Delete</button>`,{t:'media'})};
+SH.timers=()=>{
+ const pre=[['30 s',.5],['1 min',1],['2 min',2],['5 min',5],['10 min',10],['20 min',20],['30 min',30],['60 min',60]];
+ const dc=drillCtx();
+ return shell('Timers',`<div class="chips"><button class="chip" data-a="t-add" data-m="up">${ico('timer',18)} Stopwatch</button>${pre.map(([l,m])=>`<button class="chip" data-a="t-add" data-m="down" data-min="${m}">${l}</button>`).join('')}</div>
+ <p class="tiny muted" style="margin:-6px 0 0">Track ageing: 20 min IGP 1, 30 min IGP 2, 60 min IGP 3. Timers keep running while you switch screens.</p>
+ <div class="row"><input class="inp" id="tcm" type="number" inputmode="decimal" min="0.1" step="0.5" placeholder="Custom minutes"><button class="btn" data-a="t-custom">Add</button></div>
+ ${S.timers.length?S.timers.map(t=>`<div class="timer ${t.run?'run':''} ${t.done?'done':''}"><div class="row sb"><input class="inp" style="max-width:62%;min-height:38px;padding:4px 8px" value="${esc(t.label)}" data-f="t-label" data-id="${t.id}" aria-label="Timer label"><button class="ibtn" data-a="t-del" data-id="${t.id}" aria-label="Delete timer">${ico('trash',20)}</button></div><div class="big" data-tm="${t.id}" style="margin:8px 0 10px">${tShow(t)}</div><div class="row"><button class="btn pri" style="flex:2" data-a="t-toggle" data-id="${t.id}">${ico(t.run?'pause':'play',18)} ${t.run?'Pause':(tEl(t)>0&&!t.done?'Resume':'Start')}</button><button class="btn" style="flex:1" data-a="t-reset" data-id="${t.id}">Reset</button>${dc?`<button class="btn" style="flex:1.4" data-a="t-log" data-id="${t.id}">Log time</button>`:''}</div></div>`).join(''):'<div class="empty"><p>Add a stopwatch or countdown to get started. You can run several at once, for example one per dog.</p></div>'}`,{t:'timers'});
+};
+SH.about=()=>shell('About this library',`<p>The exercises here follow the structure of the FCI International Utility Dog regulations (IGP, 2025 revision), which Canadian clubs (CWDF, GSSCC and the CKC-recorded titles) trial under.</p>
+ <div class="card"><h3>2025 changes already reflected</h3><ul class="small" style="margin-top:8px"><li>IGP V and IGP-ZTP are no longer offered.</li><li>Wall is 160 cm at all levels.</li><li>Boxes are marked for dumbbell positions.</li><li>BH heeling on leash is 30 points with no left/right turns; heeling off leash removed.</li><li>IGP 1: praise allowed between exercises, no retrieve over the hurdle, long down at 10 m with the handler standing sideways, 5 m tracking line allowed, two blinds in the search.</li><li>IGP 2: no retrieve over the wall, wall exercise 10 points, stand 10 points.</li></ul></div>
+ <p class="small">I couldn’t locate a single Canadian rulebook PDF online, so please check points, distances, helper rules and any Canadian variances against your club’s current rulebook. Exercises marked “confirm” were affected by the 2025 changes. Everything is editable: tap an exercise, then Edit.</p>
+ <p class="small muted">Protection work should always be done with a qualified helper under experienced supervision.</p>`,{t:'about'});
+const drillCtx=()=>{for(let i=U.stack.length-1;i>=0;i--)if(U.stack[i].t==='drill')return U.stack[i].p;return null};
+
+/* ====================== RENDER ====================== */
+function renderSheets(){
+ const top=U.stack[U.stack.length-1];const el=$('#sheets');
+ if(!top){el.innerHTML='';document.body.classList.remove('lock');return}
+ const prev=el.querySelector('.sheet');const st=prev&&prev.dataset.sh===top.t?prev.scrollTop:0;
+ const od=prev&&prev.dataset.sh===top.t?[...prev.querySelectorAll('details')].map(d=>d.open):null;
+ el.innerHTML=SH[top.t](top.p||{});document.body.classList.add('lock');
+ if(od)[...el.querySelectorAll('details')].forEach((d,i)=>{if(i<od.length)d.open=od[i]});
+ const n=el.querySelector('.sheet');if(n)n.scrollTop=st;addDictation();
+}
+function hydrate(){$$('[data-mid]').forEach(async el=>{if(el.dataset.h)return;el.dataset.h='1';const set=u=>{el.src=el.tagName==='VIDEO'&&el.muted?u+'#t=0.1':u};const c=urlCache.get(el.dataset.mid);if(c){set(c);return}const u=await mUrl(el.dataset.mid);if(!u){el.dataset.h='';return}set(u)})}
+function render(){renderHdr();$('#view').innerHTML=VIEWS[U.tab]();renderNav();renderSheets();hydrate();tick();wake()}
+const push=(t,p)=>{U.stack.push({t,p});renderSheets();hydrate();$('#sheets .sheet')&&($('#sheets .sheet').scrollTop=0)};
+const pop=()=>{U.stack.pop();render()};
+
+/* ====================== ACTIONS ====================== */
+const ACT={
+ tab:e=>{U.tab=e.dataset.v;U.stack=[];render();window.scrollTo(0,0)},
+ close:()=>{const t=U.stack[U.stack.length-1];if(t&&t.t==='dog'&&!t.p.saved&&t.p.draft.photoId&&t.p.draft.photoId!==t.p.orig){mDel(t.p.draft.photoId);delete S.media[t.p.draft.photoId];save()}pop()},
+ 'cf-no':()=>closeAsk(),
+ 'cf-ok':()=>{const f=U.confirm&&U.confirm.fn;closeAsk();f&&f()},
+ lv:e=>{U.lv=e.dataset.v;render()},
+ about:()=>push('about'),
+ /* plan */
+ 'plan-new':()=>{U.draft={title:'Training · '+fmtDate(today()),date:today(),place:'',dogIds:S.dogs.length===1?[S.dogs[0].id]:[],plan:{}};push('plan')},
+ 'plan-open':e=>{const s=sess(e.dataset.id);U.draft=JSON.parse(JSON.stringify({id:s.id,title:s.title,date:s.date,place:s.place||'',dogIds:s.dogIds,plan:s.plan||{}}));push('plan')},
+ 'pl-dog':e=>{const D=U.draft,id=e.dataset.id;D.dogIds=D.dogIds.includes(id)?D.dogIds.filter(x=>x!==id):D.dogIds.concat(id);renderSheets()},
+ 'pl-rm':e=>{U.draft.plan[e.dataset.d].splice(+e.dataset.i,1);renderSheets()},
+ 'pl-add':e=>{const d=dog(e.dataset.d);U.pk={sel:new Set(),lv:d.level,target:'draft',dogId:d.id};push('pick')},
+ 'pl-repeat':e=>{const id=e.dataset.d;const prev=S.sessions.filter(s=>s.status==='done'&&s.plan&&s.plan[id]&&s.plan[id].length).sort((a,b)=>(b.endedAt||0)-(a.endedAt||0))[0];if(prev){U.draft.plan[id]=JSON.parse(JSON.stringify(prev.plan[id]));renderSheets()}},
+ 'pl-save':()=>savePlan(false),
+ 'pl-start':()=>savePlan(true),
+ 'pick-lv':e=>{U.pk.lv=e.dataset.v;renderSheets()},
+ 'pick-t':e=>{const s=U.pk.sel,id=e.dataset.id;s.has(id)?s.delete(id):s.add(id);renderSheets()},
+ 'pick-ok':()=>{const P=U.pk;if(P.target==='draft'){const arr=U.draft.plan[P.dogId]=U.draft.plan[P.dogId]||[];P.sel.forEach(id=>{if(!arr.some(x=>x.exId===id))arr.push({exId:id,goal:''})})}else{const s=actS();s.plan=s.plan||{};const arr=s.plan[P.dogId]=s.plan[P.dogId]||[];P.sel.forEach(id=>{if(!arr.some(x=>x.exId===id))arr.push({exId:id,goal:''})});save()}pop()},
+ /* active session */
+ 's-resume':()=>{},
+ 's-dog':e=>{U.adog=e.dataset.id;render()},
+ 's-add':()=>{const d=dog(U.adog);U.pk={sel:new Set(),lv:d.level,target:'session',dogId:d.id};push('pick')},
+ 's-cap':e=>capture(e.dataset.k,{sid:actS().id,dogId:U.adog}),
+ 's-note':()=>push('snote',{dogId:U.adog}),
+ 'sn-save':()=>{stopDict();const v=$('#snta').value.trim();if(v){const s=actS();const xs=$('#snex');s.notes=s.notes||[];s.notes.push({id:uid(),ts:Date.now(),dogId:U.adog,exId:(xs&&xs.value)||null,text:v});save()}pop()},
+ end:()=>push('wrap',{sid:actS().id}),
+ 'wr-rate':e=>{const s=sess(U.stack[U.stack.length-1].p.sid);s.wrap=s.wrap||{};s.wrap[e.dataset.d]=Object.assign(s.wrap[e.dataset.d]||{},{rating:+e.dataset.v});save();renderSheets()},
+ 'wr-finish':()=>{const s=sess(U.stack[U.stack.length-1].p.sid);s.status='done';s.endedAt=Date.now();(s.dogIds||[]).forEach(id=>{const w=(s.wrap||{})[id];const d=dog(id);if(d&&w&&w.next)d.nextUp=w.next});save();U.stack=[];render();toast('Session saved to Review')},
+ /* drill */
+ drill:e=>{const s=actS();push('drill',{sid:s.id,dogId:U.adog,exId:e.dataset.id})},
+ 'drill-dog':e=>{const t=U.stack[U.stack.length-1];t.p.dogId=e.dataset.id;U.adog=e.dataset.id;render()},
+ rep:e=>{const p=drillCtx();const l=getLog(p.sid,p.dogId,p.exId,true);const k=e.dataset.k;l[k]=Math.max(0,l[k]+ +e.dataset.n);l.ts=Date.now();save();render();try{navigator.vibrate&&navigator.vibrate(15)}catch(x){}},
+ rate:e=>{const p=drillCtx();const l=getLog(p.sid,p.dogId,p.exId,true);l.rating=l.rating===+e.dataset.v?0:+e.dataset.v;save();render()},
+ 'time-rm':e=>{const p=drillCtx();const l=getLog(p.sid,p.dogId,p.exId);l.times.splice(+e.dataset.i,1);save();render()},
+ 'd-cap':e=>{const p=drillCtx();getLog(p.sid,p.dogId,p.exId,true);capture(e.dataset.k,{sid:p.sid,dogId:p.dogId,exId:p.exId})},
+ /* library */
+ ex:e=>push('ex',{id:e.dataset.id}),
+ 'ex-edit':e=>push('exedit',{id:e.dataset.id}),
+ 'ex-new':()=>{const id='c_'+uid();S.custom.push({id,ph:'O',name:'New exercise',lv:[U.lv],std:'',steps:[],faults:[],pts:'',lvn:{},v:false});save();push('exedit',{id})},
+ 'ee-lv':e=>{const c=S.custom.find(x=>x.id===cur().id);const l=e.dataset.v;c.lv=c.lv.includes(l)?c.lv.filter(x=>x!==l):c.lv.concat(l);if(!c.lv.length)c.lv=[l];save();renderSheets()},
+ 'ee-reset':()=>{const id=cur().id;delete S.exEdits[id];save();renderSheets()},
+ 'ee-del':()=>ask('Delete this exercise? Logged history stays.','Delete',()=>{const id=cur().id;S.custom=S.custom.filter(x=>x.id!==id);save();U.stack=[];render()}),
+ /* dogs */
+ 'dog-new':()=>push('dog',{isNew:true,orig:'',draft:{id:uid(),name:'',breed:'',dob:'',level:'IGP1',color:DC[S.dogs.length%DC.length],notes:'',photoId:''}}),
+ 'dog-edit':e=>{const d=dog(e.dataset.id);push('dog',{isNew:false,orig:d.photoId||'',draft:Object.assign({},d)})},
+ 'dg-photo':()=>{const p=cur();pickFile('image/*',null,async f=>{toast('Saving photo…');const b=await shrink(f,480);if(p.draft.photoId&&p.draft.photoId!==p.orig){await mDel(p.draft.photoId);delete S.media[p.draft.photoId]}const id=await addRole('avatar',{dogId:p.draft.id},b,'image');p.draft.photoId=id;renderSheets();hydrate()})},
+ 'dg-photo-rm':()=>{const p=cur();if(p.draft.photoId&&p.draft.photoId!==p.orig){mDel(p.draft.photoId);delete S.media[p.draft.photoId];save()}p.draft.photoId='';renderSheets()},
+ 'ref-add':e=>{const id=e.dataset.id,k=e.dataset.k;pickFile(k==='image'?'image/*':'video/*',null,async f=>{toast('Saving…');const b=k==='image'?await shrink(f,1600):f;await addRole('ref',{exId:id},b,k);toast('Saved')})},
+ 'dg-lv':e=>{cur().draft.level=e.dataset.v;renderSheets()},
+ 'dg-col':e=>{cur().draft.color=e.dataset.v;renderSheets()},
+ 'dog-save':()=>{const p=cur();const d=p.draft;if(!d.name.trim()){toast('Add a name');return}d.name=d.name.trim();if(p.isNew)S.dogs.push(d);else{const i=S.dogs.findIndex(x=>x.id===d.id);S.dogs[i]=Object.assign(S.dogs[i],d)}if(p.orig&&p.orig!==d.photoId){mDel(p.orig);delete S.media[p.orig]}p.saved=true;save();pop()},
+ 'dog-del':()=>ask('Delete this dog and all their logs and recordings?','Delete',async()=>{const id=cur().draft.id;for(const m of Object.values(S.media))if(m.dogId===id){await mDel(m.id);delete S.media[m.id]}S.sessions.forEach(s=>{s.logs=(s.logs||[]).filter(l=>l.dogId!==id);s.dogIds=(s.dogIds||[]).filter(x=>x!==id)});S.sessions=S.sessions.filter(s=>s.dogIds.length||s.status==='active');S.dogs=S.dogs.filter(d=>d.id!==id);save();U.stack=[];render()}),
+ /* review */
+ rv:e=>{U.rv=e.dataset.v;render()},
+ theme:()=>push('theme'),
+ 'bk-snooze':()=>{S.settings=S.settings||{};S.settings.snooze=Date.now()+3*864e5;persist();render()},
+ 'th-mode':e=>{themeObj().mode=e.dataset.v;applyTheme();save();renderSheets()},
+ 'th-pre':e=>{const t=themeObj();t.preset=e.dataset.v;delete t.p;delete t.a;applyTheme();save();render()},
+ 'th-reset':()=>{if(S.settings)delete S.settings.theme;applyTheme();save();render()},
+ 'bk-export':()=>exportAll(),
+ 'bk-file':()=>importAll(),
+ 'cal-nav':e=>{const c=U.cal;const d=new Date(c.y,c.m+ +e.dataset.v,1);U.cal={y:d.getFullYear(),m:d.getMonth()};render()},
+ day:e=>push('day',{ds:e.dataset.id}),
+ 'due-plan':e=>{const id=e.dataset.id;U.draft={title:'Training · '+fmtDate(today()),date:today(),place:'',dogIds:[id],plan:{[id]:staleEx(id).slice(0,5).map(x=>({exId:x.id,goal:'Not practised for '+x.since+' days'}))}};push('plan')},
+ 'set-goal':e=>{S.settings=S.settings||{};S.settings.goal=+e.dataset.v;save();render()},
+ 'set-stale':e=>{S.settings=S.settings||{};S.settings.stale=+e.dataset.v;save();render()},
+ dictate:e=>dictate(e),
+ rdog:e=>{U.rdog=e.dataset.id;render()},
+ mk:e=>{U.mk=e.dataset.v;render()},
+ sdet:e=>push('sdet',{id:e.dataset.id}),
+ exhist:e=>push('exhist',{id:e.dataset.id}),
+ 's-del':e=>ask('Delete this session and its recordings?','Delete',async()=>{const s=sess(e.dataset.id);for(const m of Object.values(S.media))if(m.sid===s.id){await mDel(m.id);delete S.media[m.id]}S.sessions=S.sessions.filter(x=>x.id!==s.id);save();U.stack=[];render()}),
+ 'm-open':e=>push('media',{id:e.dataset.id}),
+ 'm-del':e=>ask('Delete this recording?','Delete',async()=>{const id=e.dataset.id;await mDel(id);delete S.media[id];S.sessions.forEach(s=>{(s.logs||[]).forEach(l=>{l.mediaIds=(l.mediaIds||[]).filter(x=>x!==id)});s.captured=(s.captured||[]).filter(x=>x!==id)});Object.keys(S.exRefs||{}).forEach(k=>{S.exRefs[k]=S.exRefs[k].filter(x=>x!==id)});save();pop()}),
+ /* recording */
+ 'rec-stop':()=>{REC.mr&&REC.mr.state!=='inactive'&&REC.mr.stop()},
+ 'rec-cancel':()=>{REC.cancel=true;REC.mr&&REC.mr.state!=='inactive'&&REC.mr.stop()},
+ /* timers */
+ timers:()=>{unlockAudio();if(!(U.stack.length&&U.stack[U.stack.length-1].t==='timers'))push('timers')},
+ 't-add':e=>addTimer(e.dataset.m,e.dataset.min?+e.dataset.min:0),
+ 't-custom':()=>{const v=parseFloat($('#tcm').value);if(v>0)addTimer('down',v,v+' min');else toast('Enter minutes')},
+ 't-toggle':e=>{unlockAudio();const t=S.timers.find(x=>x.id===e.dataset.id);if(t.done){t.acc=0;t.done=false}if(t.run){t.acc=tEl(t);t.run=false}else{t.start=Date.now();t.run=true}save();renderSheets();wake()},
+ 't-reset':e=>{const t=S.timers.find(x=>x.id===e.dataset.id);t.run=false;t.acc=0;t.done=false;save();renderSheets();wake()},
+ 't-del':e=>{S.timers=S.timers.filter(x=>x.id!==e.dataset.id);save();renderSheets();wake()},
+ 't-log':e=>{const p=drillCtx();const t=S.timers.find(x=>x.id===e.dataset.id);if(!p||!t)return;const l=getLog(p.sid,p.dogId,p.exId,true);l.times.push(Math.round((t.mode==='down'?Math.min(t.dur,tEl(t)):tEl(t))/1000));save();toast('Time logged');render()}
+};
+const cur=()=>U.stack[U.stack.length-1].p;
+
+function savePlan(start){
+ const D=U.draft;if(!D.dogIds.length){toast('Pick at least one dog');return}
+ const a=actS();let s=D.id&&sess(D.id);
+ if(start&&a&&(!s||a.id!==s.id)){toast('Finish the current session first');return}
+ if(!s){s={id:uid(),logs:[],notes:[],wrap:{},status:'planned'};S.sessions.push(s)}
+ Object.assign(s,{title:D.title||'Training',date:D.date||today(),place:D.place,dogIds:[...D.dogIds],plan:JSON.parse(JSON.stringify(D.plan))});
+ Object.keys(s.plan).forEach(k=>{if(!s.dogIds.includes(k))delete s.plan[k]});
+ if(start){s.status='active';s.startedAt=s.startedAt||Date.now();U.adog=s.dogIds[0];U.tab='session'}
+ save();U.stack=[];U.draft=null;render();toast(start?'Session started':'Plan saved');
+}
+
+/* ====================== FIELD HANDLERS (typing: no re-render) ====================== */
+const F={'th-p':e=>setCustom('p',e.value),'th-a':e=>setCustom('a',e.value),
+ 'lib-q':e=>{U.q=e.value;$('#libList').innerHTML=libList()},
+ 'pl-title':e=>{U.draft.title=e.value},'pl-date':e=>{U.draft.date=e.value},'pl-place':e=>{U.draft.place=e.value},
+ 'pl-goal':e=>{U.draft.plan[e.dataset.d][+e.dataset.i].goal=e.value},
+ 'log-notes':e=>{const p=drillCtx();const l=getLog(p.sid,p.dogId,p.exId,true);l.notes=e.value;save()},
+ 'wr-good':e=>{const s=sess(cur().sid);s.wrap=s.wrap||{};s.wrap[e.dataset.d]=Object.assign(s.wrap[e.dataset.d]||{},{good:e.value});save()},
+ 'wr-next':e=>{const s=sess(cur().sid);s.wrap=s.wrap||{};s.wrap[e.dataset.d]=Object.assign(s.wrap[e.dataset.d]||{},{next:e.value});save()},
+ 'wr-sess':e=>{sess(cur().sid).sessNote=e.value;save()},
+ 'dg-name':e=>{cur().draft.name=e.value},'dg-breed':e=>{cur().draft.breed=e.value},'dg-dob':e=>{cur().draft.dob=e.value},'dg-notes':e=>{cur().draft.notes=e.value},
+ 'm-cap':e=>{S.media[e.dataset.id].cap=e.value;save()},
+ 't-label':e=>{S.timers.find(t=>t.id===e.dataset.id).label=e.value;save()},
+ 'ee-name':e=>exSet({name:e.value}),'ee-ph':e=>exSet({ph:e.value}),'ee-std':e=>exSet({std:e.value}),'ee-pts':e=>exSet({pts:e.value}),'ee-mine':e=>exSet({mine:e.value}),
+ 'ee-steps':e=>exSet({steps:e.value.split('\n').map(x=>x.trim()).filter(Boolean)}),
+ 'ee-faults':e=>exSet({faults:e.value.split('\n').map(x=>x.trim()).filter(Boolean)})
+};
+function exSet(o){const id=cur().id;const c=S.custom.find(x=>x.id===id);if(c)Object.assign(c,o);else S.exEdits[id]=Object.assign(S.exEdits[id]||{},o);save()}
+
+/* ====================== EVENTS ====================== */
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=ACT[el.dataset.a];if(f){e.preventDefault();try{f(el,e)}catch(x){console.error(x);toast('Something went wrong')}}});
+document.addEventListener('input',e=>{const el=e.target;if(el.dataset&&el.dataset.f&&F[el.dataset.f])try{F[el.dataset.f](el)}catch(x){console.error(x)}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){wake();tick()}});
+
+/* ====================== BOOT ====================== */
+load().then(()=>{
+ const a=actS();if(a)U.adog=a.dogIds[0];
+ applyTheme();render();setInterval(tick,250);
+ if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+ try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme)}catch(e){}
+ const sp=document.getElementById('splash');if(sp){setTimeout(()=>sp.classList.add('out'),900);setTimeout(()=>sp.remove(),1600)}
+});
+})();
+</script>
+</body>
+</html>

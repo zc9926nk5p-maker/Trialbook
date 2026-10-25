@@ -1,5 +1,5 @@
 // Trialbook service worker: lets the app open and work offline in the field.
-const V = 'trialbook-v3';
+const V = 'trialbook-v4';
 const KEEP = [V, V + '-fonts'];
 const SHELL = ['./', './index.html', './manifest.webmanifest', './favicon.svg', './logo.svg',
   './icon-192.png', './icon-512.png', './apple-touch-icon.png'];

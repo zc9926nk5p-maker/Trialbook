@@ -3,7 +3,8 @@
 A phone-first companion for IGP dog training. Plan a session, run it with step-by-step reminders,
 counters, timers and capture, then review progress later. Works for several dogs in one session.
 
-- Exercise library for BH and IGP 1–3 (tracking, obedience, protection), editable
+- Exercise library for BH and IGP 1–3 (tracking, obedience, protection) and Scent Hurdle Racing, all editable
+- Scent hurdle tools: hurdle height from shoulder height, heat points, titles and a rules summary
 - Notes, photos, video and voice memos per exercise, with dictation
 - Stopwatch and countdown timers (track ageing presets)
 - Training calendar, weekly goals, streaks and practice nudges
@@ -11,15 +12,16 @@ counters, timers and capture, then review progress later. Works for several dogs
 - Colour themes and light/dark mode
 - Installs to your phone's home screen and works offline
 
-The exercise library follows the structure of the FCI IGP regulations (2025 revision) that Canadian clubs
-trial under. Always check points, distances and variances against your club's current rulebook, and edit the
+The IGP exercise library follows the structure of the FCI IGP regulations (2025 revision) that Canadian clubs
+trial under. The scent hurdle section follows the Canadian Scent Hurdle Racing Association (CSHRA) rules; the
+most complete public copy was the 2010 revision, so check the current rules at scenthurdle.ca. Always check points, distances and variances against your club's current rulebook, and edit the
 library to match. Protection work should only be done with a qualified helper.
 
 ## Host it on GitHub Pages
 
 1. Create a new repository on GitHub (for example `trialbook`). Public is fine; Pages on private repos needs a paid plan.
 2. Upload everything in this folder to the repository root (drag the files into the web page, or use git).
-   Keep the `icons` folder and the `.nojekyll` file.
+   Keep the `.nojekyll` file. Everything sits in the repository root, with no subfolders.
 3. In the repository, open **Settings > Pages**. Under **Build and deployment**, choose **Deploy from a branch**,
    pick `main` and `/ (root)`, then Save.
 4. After a minute your app is at `https://<your-username>.github.io/trialbook/`.
@@ -62,7 +64,7 @@ If you change the files the app caches, bump the `V` version string at the top o
 | `sw.js` | Offline support |
 | `manifest.webmanifest` | Home screen install details |
 | `logo.svg`, `logo-mark.svg`, `favicon.svg` | Logo files |
-| `icons/` | App icons |
+| `icon-192.png`, `icon-512.png`, `icon-maskable-512.png`, `apple-touch-icon.png` | App icons |
 
 ## Licence
 

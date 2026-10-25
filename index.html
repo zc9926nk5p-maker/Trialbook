@@ -16,9 +16,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#EFF2EE;--surface:#FFFFFF;--surface2:#E4E9E3;--ink:#15201B;--muted:#56635D;--line:#D1D8D1;--primary:#1F4D3F;--onprimary:#FFFFFF;--accent:#D9480F;--T:#7F5314;--Tt:#F1E6D1;--O:#2A5A99;--Ot:#DCE7F4;--P:#B0332A;--Pt:#F5DDD9;--B:#5B4A8A;--Bt:#E6E0F2;--ok:#2B7A4B;--bad:#B0332A;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1512;--surface:#17221D;--surface2:#213029;--ink:#E7EEE9;--muted:#9BAAA2;--line:#2B3B34;--primary:#58B391;--onprimary:#06150F;--accent:#FF8A4C;--T:#E3B06A;--Tt:#2E2415;--O:#8DB6EE;--Ot:#17263A;--P:#F08A80;--Pt:#3A1B18;--B:#B7A6EA;--Bt:#2A2340;--ok:#6CCB93;--bad:#F08A80;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0E1512;--surface:#17221D;--surface2:#213029;--ink:#E7EEE9;--muted:#9BAAA2;--line:#2B3B34;--primary:#58B391;--onprimary:#06150F;--accent:#FF8A4C;--T:#E3B06A;--Tt:#2E2415;--O:#8DB6EE;--Ot:#17263A;--P:#F08A80;--Pt:#3A1B18;--B:#B7A6EA;--Bt:#2A2340;--ok:#6CCB93;--bad:#F08A80;color-scheme:dark}
+:root{--bg:#EFF2EE;--surface:#FFFFFF;--surface2:#E4E9E3;--ink:#15201B;--muted:#56635D;--line:#D1D8D1;--primary:#1F4D3F;--onprimary:#FFFFFF;--accent:#D9480F;--T:#7F5314;--Tt:#F1E6D1;--O:#2A5A99;--Ot:#DCE7F4;--P:#B0332A;--Pt:#F5DDD9;--B:#5B4A8A;--Bt:#E6E0F2;--S:#0F766E;--St:#D3EEE9;--ok:#2B7A4B;--bad:#B0332A;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1512;--surface:#17221D;--surface2:#213029;--ink:#E7EEE9;--muted:#9BAAA2;--line:#2B3B34;--primary:#58B391;--onprimary:#06150F;--accent:#FF8A4C;--T:#E3B06A;--Tt:#2E2415;--O:#8DB6EE;--Ot:#17263A;--P:#F08A80;--Pt:#3A1B18;--B:#B7A6EA;--Bt:#2A2340;--S:#5FD3C3;--St:#12312D;--ok:#6CCB93;--bad:#F08A80;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1512;--surface:#17221D;--surface2:#213029;--ink:#E7EEE9;--muted:#9BAAA2;--line:#2B3B34;--primary:#58B391;--onprimary:#06150F;--accent:#FF8A4C;--T:#E3B06A;--Tt:#2E2415;--O:#8DB6EE;--Ot:#17263A;--P:#F08A80;--Pt:#3A1B18;--B:#B7A6EA;--Bt:#2A2340;--S:#5FD3C3;--St:#12312D;--ok:#6CCB93;--bad:#F08A80;color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.4 Barlow,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
@@ -162,6 +162,7 @@ input[type=color]{width:64px;height:46px;border:1.5px solid var(--line);border-r
 .splash svg{animation:pop .7s ease-out both}
 @keyframes pop{from{transform:scale(.7);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.splash svg{animation:none}.splash{transition:none}}
+.tag.S{background:var(--St);color:var(--S)}.card.S,.item.S{border-left:5px solid var(--S)}
 </style>
 </head>
 <body>
@@ -182,10 +183,10 @@ input[type=color]{width:64px;height:46px;border:1.5px solid var(--line);border-r
 /* ====================== LIBRARY DATA ======================
    Baseline built from the FCI IGP regulations (2025 revision) that CWDF / GSSCC trials run under.
    Everything is editable in the app. Confirm points, distances and Canadian variances in your club's rulebook. */
-const LV=['BH','IGP1','IGP2','IGP3'];
-const LVN={BH:'BH',IGP1:'IGP 1',IGP2:'IGP 2',IGP3:'IGP 3'};
-const PH={B:'Companion',T:'Tracking',O:'Obedience',P:'Protection'};
-const PHO=['B','T','O','P'];
+const LV=['BH','IGP1','IGP2','IGP3','SHR'];
+const LVN={BH:'BH',IGP1:'IGP 1',IGP2:'IGP 2',IGP3:'IGP 3',SHR:'SHR'};
+const PH={B:'Companion',T:'Tracking',O:'Obedience',P:'Protection',S:'Scent hurdles'};
+const PHO=['B','T','O','P','S'];
 const IG=['IGP1','IGP2','IGP3'];
 const X=(id,ph,name,lv,std,steps,faults,o={})=>Object.assign({id,ph,name,lv,std,steps,faults,pts:'',lvn:{},v:false},o);
 const BASE=[
@@ -278,7 +279,43 @@ X('p_defense_guard','P','Defense from guarding position',IG,'After guarding, the
  ['Pressure from the dog before the cue','Reacting too late'],{v:true}),
 X('p_courage','P','Courage test',IG,'Dog launches a long attack from the starting position on the helper, with a full grip and no hesitation.',
  ['Build a full-speed bite on the helper in drive.','Add distance in small steps.','Practise with different helpers and locations.'],
- ['Slow approach','Partial grip','Leaving before the bite'])
+ ['Slow approach','Partial grip','Leaving before the bite']),
+X('s_hold','S','Dumbbell: take, hold and carry',['SHR'],'The dog takes the dumbbell, carries it without chewing, and brings it back across the line. Dropping it isn’t penalized, but it costs time. Race dumbbells are all wood with the dog’s number on both ends.',
+ ['Reward the dog for taking the dumbbell from your hand and holding it for a second.','Add holding time, then walk a few steps while the dog carries.','Practise a clean delivery to your hand.','Move to the wooden race dumbbell sized for your dog (check the current spec).','Build speed with a toy reward at the finish.'],
+ ['Mouthing or chewing','Dropping on the way back','Spitting it out at the line'],{v:true}),
+X('s_pick','S','Fast pick-up and return',['SHR'],'The dog grabs its dumbbell cleanly from the platform, turns and runs straight back over the hurdles.',
+ ['Practise the pick-up from the ground, then from a low platform.','Mark the grab, and make the return the best part with a toy or game.','Add distance and speed, rewarding fast turns.','Practise leaving the platform without lingering.'],
+ ['Lingering at the platform','Slow return','Re-grabbing after a drop'],{v:true}),
+X('s_scent','S','Scent discrimination: your dumbbell',['SHR'],'The dog finds the dumbbell with its handler’s natural scent among three others and picks only that one. If a dog returns with more than one, the run still counts as long as one is its own.',
+ ['Scent your dumbbell naturally with your hands only, with no added scents.','Start with one dumbbell, then add one dummy a few feet away and reward the right pick.','Work up to three dummies on the platform, shuffling positions.','Keep your body still and your eyes off the dumbbell so you don’t cue the dog.','Have helpers handle and set out the dummies, then add speed.'],
+ ['Guessing without sniffing','Picking a dummy','Carrying more than one','Handler cueing'],{v:true}),
+X('s_dummy','S','Ignore dummies and other scents',['SHR'],'The dog ignores the “X” dummy dumbbells. After each dog retrieves, the steward puts a dummy in the empty section, so the platform stays full of four dumbbells until the last dog.',
+ ['Have many different people handle the dummies so they carry mixed scent.','Mix dummies and your dumbbell in different sections.','Reward only the correct pick and stay calm about wrong ones.','Practise with a teammate’s dumbbell in place.'],
+ ['Picking dummies','Hovering between two dumbbells'],{v:true}),
+X('s_platform','S','Platform: find your section',['SHR'],'The platform is 24 in square and 3 in high, split diagonally into four sections numbered clockwise. Each dog goes to the number on its jacket. The platform is rotated between heats.',
+ ['Introduce the platform with treats for stepping on it calmly.','Teach the dog to run straight to the platform and look for its dumbbell.','Rotate the platform between reps so the dog works every position.','Add an edge moulding and practise without pushing dumbbells off.','Practise with all four sections filled.'],
+ ['Circling the platform','Knocking dumbbells off','Going to the wrong section first'],{v:true}),
+X('s_height','S','Hurdle height and jump form',['SHR'],'All four hurdles are the same height: 4 in below the smallest dog’s shoulder, no lower than 7 in and no higher than 16 in, set to the nearest inch. The smallest dog in the heat sets it for the team.',
+ ['Measure each dog’s shoulder height at the withers.','Use the SHR tools to find the hurdle setting.','Build jump form at lower heights and add height gradually.','Check with your vet before jumping young dogs at full height.'],
+ ['Hurdles set too high for the smallest dog','Flat, scrambling jumps','Hard landings'],{v:true}),
+X('s_hurdle','S','Four hurdles, down and back',['SHR'],'The dog clears all four hurdles on the way to the platform and again on the way back. The first hurdle is 4 ft from the start line, the hurdles are 10 ft apart, and the platform is 12 ft past the fourth. A knocked bar is not penalized if the dog completes the course.',
+ ['Teach one low jump with a toy reward on the far side.','Add hurdles one at a time, then all four with a toy at the end.','Add the platform and the dumbbell at the end.','Add the return over the hurdles and a fast finish.','Raise the height to your team setting gradually.'],
+ ['Running around a hurdle','Slowing at the last hurdle','Skipping a hurdle on the return'],{v:true}),
+X('s_start','S','Start line: wait, then go on the whistle',['SHR'],'The dog waits behind the start line and is released at the whistle. A release before the whistle is a dead heat, a handler stepping over the line while their own dog runs loses the heat, and propelling a dog over the line adds 2 seconds.',
+ ['Teach a solid stay at the line with distractions.','Release only after the whistle, and practise with a whistle.','Use a consistent starting position and keep your feet behind the line.','Practise with dogs lined up one behind the other.'],
+ ['Anticipating the whistle','Handler stepping over the line','Creeping'],{v:true}),
+X('s_finish','S','Return across the line',['SHR'],'The next dog is sent only after the previous dog has crossed the finish line. Crossing the start line early adds 2 seconds. In a close finish the dog whose nose crosses first wins.',
+ ['Train a fast return straight to your hand or a toy at the line.','Teach teammates to wait for the crossing before sending the next dog.','Drill the handoff with a partner calling the crossing.','Add speed once the handoff is clean.'],
+ ['Early send','Dropping the dumbbell short of the line','Veering at the line'],{v:true}),
+X('s_correct','S','Redirect and re-run',['SHR'],'If a dog starts to retrieve the wrong dumbbell or goes around a hurdle, the handler may correct it by voice or signal but may not leave the start area. If it can’t be corrected, recall it and re-run it after the fourth dog. A dog may be re-sent only once.',
+ ['Teach a “leave it” or “check” cue away from the platform.','Teach a recall from the platform area.','Redirect to the correct dumbbell without a big reward for the wrong one.','Rehearse the re-run order with your team.'],
+ ['Over-correcting','Dog ignoring the redirect'],{v:true}),
+X('s_lane','S','Racing beside another team',['SHR'],'Two teams race at once in lanes 12 ft apart with a centre line between them. A dog crossing it with all four paws, or a handler with both feet, loses the heat.',
+ ['Practise with a helper dog working the next lane.','Reward your dog for staying in its lane near distractions.','Add noise, whistles and an excited crowd.','Train with lane markers or a barrier along the centre line.'],
+ ['Looking over at the other dog','Drifting toward the centre line'],{v:true}),
+X('s_heat','S','Full heat: team relay',['SHR'],'A heat is four dogs relaying down and back. Clean heats earn points by time under the 2010 rules: under 30 s earns 20, under 35 s earns 10, 35 s or more earns 5, and a heat over 80 s earns none. Races are usually first to win two of three heats.',
+ ['Run each dog solo first, then in order with an empty lane.','Add timing and the handoff between dogs.','Add the second lane and a rival team.','Log the time and any faults after each heat.'],
+ ['Dropped dumbbell','Early send','Wrong dumbbell twice'],{v:true})
 ];
 
 const DC=['#2F7D5B','#2D5E9E','#B0332A','#C77A12','#6D4C9F','#A3366F'];
@@ -329,7 +366,7 @@ function importAll(){
    for(const id of Object.keys(o.media||{})){try{const b=await (await fetch(o.media[id].d)).blob();await mPut({id,blob:b})}catch(e){}}
    urlCache.clear();persist();applyTheme();U.stack=[];render();toast('Backup restored')})};r.readAsText(f)});
 }
-const APP_VERSION='1.1.0';
+const APP_VERSION='1.2.0';
 function backupAge(){const t=S.settings&&S.settings.lastBackup;return t?Math.floor((Date.now()-t)/864e5):null}
 const agoLbl=n=>n===null?'never':n===0?'today':n===1?'yesterday':n+' days ago';
 function storageCard(){
@@ -411,7 +448,7 @@ function tick(){
 const shell=(title,body,o={})=>`<div class="sheet" data-sh="${o.t||''}"><div class="shead"><button class="ibtn" data-a="close" aria-label="Back">${ico(o.x?'x':'back')}</button><h2>${title}</h2><div class="row">${o.right||''}</div></div><div class="sbody">${body}</div>${o.foot?`<div class="sfoot">${o.foot}</div>`:''}</div>`;
 const dogChips=(ids,cur,act,extra)=>`<div class="chips">${ids.map(id=>{const d=dog(id);if(!d)return'';return `<button class="chip ${cur===id?'on':''}" ${dotStyle(d)} data-a="${act}" data-id="${id}">${mark(d)}${esc(d.name)}${extra?extra(id):''}</button>`}).join('')}</div>`;
 const mediaGrid=ids=>{ids=(ids||[]).filter(i=>S.media[i]);if(!ids.length)return'';return `<div class="media">${ids.map(i=>{const m=S.media[i];const inner=m.kind==='image'?`<img data-mid="${i}" alt="Photo">`:m.kind==='video'?`<video data-mid="${i}" muted playsinline preload="metadata"></video>`:`<span>${ico('mic',30)}</span>`;return `<button class="mth" data-a="m-open" data-id="${i}" aria-label="Open ${m.kind}">${inner}<span class="k">${m.kind==='audio'?'Voice '+fmtT((m.dur||0)*1000):m.kind==='video'?'Video':'Photo'}</span></button>`}).join('')}</div>`};
-const exBody=(e,lv)=>`<p>${esc(e.std)}</p>${e.pts?`<p class="small muted">Points: ${esc(e.pts)}</p>`:''}${lv&&e.lvn&&e.lvn[lv]?`<div class="hl small"><b>${LVN[lv]}:</b> ${esc(e.lvn[lv])}</div>`:''}${e.v?`<p class="tiny muted" style="margin-top:8px">Confirm wording and points against your rulebook; the 2025 changes touched this exercise.</p>`:''}`;
+const exBody=(e,lv)=>`<p>${esc(e.std)}</p>${e.pts?`<p class="small muted">Points: ${esc(e.pts)}</p>`:''}${lv&&e.lvn&&e.lvn[lv]?`<div class="hl small"><b>${LVN[lv]}:</b> ${esc(e.lvn[lv])}</div>`:''}${e.v?`<p class="tiny muted" style="margin-top:8px">${e.lv.includes('SHR')?'Based on the CSHRA rules as revised in 2010. Confirm against the current rules at scenthurdle.ca.':'Confirm wording and points against your rulebook; the 2025 changes touched this exercise.'}</p>`:''}`;
 const stepsHtml=e=>`<ol>${(e.steps||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ol>`;
 const faultsHtml=e=>`<ul>${(e.faults||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ul>${e.mine?`<p class="small"><b>My cues:</b> ${esc(e.mine)}</p>`:''}`;
 
@@ -461,7 +498,11 @@ DG.start=()=>fig(`${flagG(90,120)}<circle cx="104" cy="122" r="16" fill="none" s
 DG.corner=()=>fig(`${gP('M40 130H170V40',{c:'var(--T)',w:3,solid:1})}${gD(150,122)}${[100,80,60].map(y=>`<circle cx="170" cy="${y}" r="3" fill="var(--accent)"/>`).join('')}${gT(184,80,'Food after the turn','start')}${gT(184,128,'Slow, nose down','start')}`,'Corner: the dog slows, stays nose down and follows the new line without overshooting.'+SCH);
 DG.article=()=>fig(`${gP('M30 100H290',{c:'var(--T)',w:3,solid:1,noArrow:1})}${art(180,100)}${gD(168,114,true)}${gT(180,134,'Dog indicates with nose on the article')}${gH(60,130)}${gP('M66 126L130 108',{solid:0})}`,'Article indication: the dog finds the article and indicates it without chewing or carrying it.'+SCH);
 DG.line=lv=>fig(`${gH(50,110)}${gD(270,110)}${gP('M57 110C120 152 200 152 262 112',{solid:1,noArrow:1})}${gT(160,150,(lv==='IGP1'?'10 m line (5 m allowed from 2025)':'10 m line'))+gT(160,92,'Line kept slack')}`,'Line handling: you follow behind and let the dog work independently.'+SCH);
-function diagFor(e,lv){const m={b_heel:()=>DG.heel(true),o_heel_leash:()=>DG.heel(),o_heel_free:()=>DG.heel(),b_sitdown:()=>DG.oom('sit'),o_sit:()=>DG.oom('sit'),o_stand_walk:()=>DG.oom('stand'),o_stand_motion:()=>DG.oom('stand'),b_recall:DG.recall,o_down_recall:DG.downrecall,o_retrieve_flat:DG.retr,o_hurdle:DG.hurdle,o_wall:DG.wall,o_sendout:DG.send,o_longdown:DG.longdown,t_start:DG.start,t_track:()=>DG.track(lv),t_corners:DG.corner,t_articles:DG.article,t_age:()=>DG.track('IGP3'),t_line:()=>DG.line(lv),p_search:()=>DG.search(lv),p_escape:DG.escape,p_guard:DG.guard,p_back:DG.back,p_attack_trans:DG.attack,p_defense_guard:DG.defguard,p_courage:DG.courage};const f=m[e.id];return f?f():''}
+DG.shrcourse=()=>fig(`<line x1="38" y1="66" x2="38" y2="140" stroke="var(--ink)" stroke-width="2"/>${gT(8,158,'Start / finish line','start')}${[58,108,158,208].map(x=>`<rect x="${x-2}" y="76" width="4" height="48" rx="1" fill="var(--S)"/>`).join('')}<rect x="257" y="89" width="22" height="22" rx="2" fill="var(--S)"/><path d="M257 89L279 111M279 89L257 111" stroke="var(--surface)" stroke-width="1.5"/>${gT(268,82,'Platform')}${gH(12,118)}${gD(26,100)}${gP('M32 96H250',{c:'var(--S)',solid:1})}${gP('M250 106H44',{c:'var(--accent)'})}${gT(48,70,'4 ft')}${gT(83,70,'10 ft')}${gT(133,70,'10 ft')}${gT(183,70,'10 ft')}${gT(235,70,'12 ft')}${gT(160,44,'Four hurdles, then the numbered dumbbell platform')}`,'Scent hurdle course: start line, four hurdles 10 ft apart (the first 4 ft from the line), and the platform 12 ft past the fourth.'+SCH);
+DG.shrplat=()=>fig(`<rect x="110" y="36" width="100" height="100" fill="var(--St)" stroke="var(--S)" stroke-width="3"/><path d="M110 36L210 136M210 36L110 136" stroke="var(--S)" stroke-width="2"/>${[['1',160,122],['2',126,92],['3',160,66],['4',194,92]].map(([n,x,y])=>`<text x="${x}" y="${y}" text-anchor="middle" font-size="18" font-weight="700" fill="var(--S)">${n}</text>`).join('')}${gT(160,156,'Start line side (lowest number at home position)')}`,'Platform: 24 in by 24 in by 3 in, split diagonally into four sections numbered 1 to 4 clockwise. Both platforms start in the same position and are rotated between heats.'+SCH,{noLeg:1});
+DG.shrhurdle=()=>fig(`<line x1="10" y1="140" x2="310" y2="140" stroke="var(--line)" stroke-width="2"/><path d="M55 114V140M87 114V140" stroke="var(--primary)" stroke-width="4" stroke-linecap="round"/><ellipse cx="72" cy="105" rx="30" ry="11" fill="var(--primary)"/><circle cx="106" cy="94" r="8" fill="var(--primary)"/><line x1="40" y1="96" x2="300" y2="96" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="4 4"/>${gT(300,90,'Shoulder (withers)','end')}<rect x="150" y="72" width="4" height="68" fill="var(--muted)"/><rect x="214" y="72" width="4" height="68" fill="var(--muted)"/><rect x="150" y="116" width="68" height="5" fill="var(--S)"/>${gT(184,66,'Hurdle bar')}<path d="M250 98V114" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#ar)" marker-start="url(#ar)"/>${gT(260,110,'4 in','start')}${gT(160,160,'Set 4 in below shoulder, minimum 7 in, maximum 16 in')}`,'Hurdle height is set 4 in below the smallest dog’s shoulder, within 7 to 16 in.'+SCH,{noLeg:1});
+DG.shrlane=()=>fig(`<line x1="20" y1="100" x2="300" y2="100" stroke="var(--P)" stroke-width="2" stroke-dasharray="6 5"/>${gT(160,94,'Centre line')}${[95,140,185].map(x=>`<rect x="${x-2}" y="48" width="4" height="30" fill="var(--S)"/><rect x="${x-2}" y="122" width="4" height="30" fill="var(--S)"/>`).join('')}<rect x="250" y="55" width="18" height="18" rx="2" fill="var(--S)"/><rect x="250" y="129" width="18" height="18" rx="2" fill="var(--S)"/>${gH(14,63)}${gD(34,63)}${gH(14,137)}${gD(34,137)}${gP('M48 63H240',{c:'var(--S)',solid:1})}${gP('M48 137H240',{c:'var(--S)',solid:1})}${gT(160,38,'Team A lane')}${gT(160,166,'Team B lane')}`,'Two teams race at once. A dog with all four paws over the centre line, or a handler with both feet, loses the heat.'+SCH);
+function diagFor(e,lv){const m={s_hurdle:DG.shrcourse,s_heat:DG.shrcourse,s_platform:DG.shrplat,s_height:DG.shrhurdle,s_lane:DG.shrlane,b_heel:()=>DG.heel(true),o_heel_leash:()=>DG.heel(),o_heel_free:()=>DG.heel(),b_sitdown:()=>DG.oom('sit'),o_sit:()=>DG.oom('sit'),o_stand_walk:()=>DG.oom('stand'),o_stand_motion:()=>DG.oom('stand'),b_recall:DG.recall,o_down_recall:DG.downrecall,o_retrieve_flat:DG.retr,o_hurdle:DG.hurdle,o_wall:DG.wall,o_sendout:DG.send,o_longdown:DG.longdown,t_start:DG.start,t_track:()=>DG.track(lv),t_corners:DG.corner,t_articles:DG.article,t_age:()=>DG.track('IGP3'),t_line:()=>DG.line(lv),p_search:()=>DG.search(lv),p_escape:DG.escape,p_guard:DG.guard,p_back:DG.back,p_attack_trans:DG.attack,p_defense_guard:DG.defguard,p_courage:DG.courage};const f=m[e.id];return f?f():''}
 
 /* ====================== VIEWS ====================== */
 function ringAv(d){const st=dogStats(d.id);const f=Math.min(1,st.week/st.goal),C=131.9;return `<span class="ring" title="${esc(d.name)}: ${st.week} of ${st.goal} days this week"><svg viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r="21" fill="none" stroke="currentColor" stroke-opacity=".28" stroke-width="4"/><circle cx="25" cy="25" r="21" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(f*C).toFixed(1)} ${C}" transform="rotate(-90 25 25)"/></svg>${avatar(d,34)}</span>`}
@@ -532,8 +573,8 @@ function libList(){
 }
 function viewLib(){return `<div class="pad"><div class="seg">${LV.map(l=>`<button class="${U.lv===l?'on':''}" data-a="lv" data-v="${l}">${LVN[l]}</button>`).join('')}</div>
  <input class="inp" type="search" placeholder="Search exercises" value="${esc(U.q)}" data-f="lib-q" aria-label="Search exercises">
- <div id="libList" class="pad">${libList()}</div>
- <div class="row wrap"><button class="btn sm" data-a="ex-new">${ico('plus',18)} New exercise</button><button class="btn sm" data-a="about">About this library</button></div></div>`}
+ ${U.lv==='SHR'?shrIntro():''}<div id="libList" class="pad">${libList()}</div>
+ <div class="row wrap"><button class="btn sm" data-a="ex-new">${ico('plus',18)} New exercise</button>${U.lv==='SHR'?'<button class="btn sm" data-a="shr">SHR tools and rules</button>':''}<button class="btn sm" data-a="about">About this library</button></div></div>`}
 
 function viewDogs(){
  const st=Object.values(S.media).reduce((a,m)=>a+(m.size||0),0);
@@ -617,6 +658,7 @@ SH.dog=p=>{const d=p.draft;return shell(p.isNew?'Add a dog':'Edit dog',`
  <div class="row" style="gap:14px">${avatar(d,92)}<div class="list" style="gap:8px"><button class="btn sm" data-a="dg-photo">${ico('cam',18)} ${d.photoId?'Change photo':'Add photo'}</button>${d.photoId?'<button class="btn sm" data-a="dg-photo-rm">Remove photo</button>':''}</div></div>
  <div class="fld"><label class="lbl">Name</label><input class="inp" data-f="dg-name" value="${esc(d.name)}"></div>
  <div class="fld"><label class="lbl">Breed</label><input class="inp" data-f="dg-breed" value="${esc(d.breed||'')}"></div>
+ <div class="fld"><label class="lbl">Shoulder height in inches (sets scent hurdle height)</label><input class="inp" type="number" inputmode="decimal" step="0.5" min="0" data-f="dg-sh" value="${esc(d.shoulder||'')}"></div>
  <div class="fld"><label class="lbl">Date of birth</label><input class="inp" type="date" data-f="dg-dob" value="${esc(d.dob||'')}"></div>
  <div><label class="lbl">Working toward</label><div class="seg">${LV.map(l=>`<button class="${d.level===l?'on':''}" data-a="dg-lv" data-v="${l}">${LVN[l]}</button>`).join('')}</div></div>
  <div><label class="lbl">Colour</label><div class="chips">${DC.map(c=>`<button class="chip ${d.color===c?'on':''}" style="--dc:${c}" data-a="dg-col" data-v="${c}" aria-label="Colour"><span class="dot" style="width:20px;height:20px"></span></button>`).join('')}</div></div>
@@ -697,6 +739,26 @@ SH.theme=()=>{const t=themeObj();const b=themeBase();
  <div class="card"><b>Your own colours</b><div class="row" style="gap:18px;margin-top:10px"><label class="small muted">Main<br><input type="color" data-f="th-p" value="${b.p}" aria-label="Main colour"></label><label class="small muted">Accent<br><input type="color" data-f="th-a" value="${b.a}" aria-label="Accent colour"></label></div><p class="tiny muted" style="margin:10px 0 0">Main colours the header, buttons and highlights. Accent colours the timer button and small markers. Dark mode lightens them automatically.</p></div>
  <div class="hero"><div class="small" style="opacity:.85">Preview</div><h2>Ready to train?</h2><button class="btn hb big" style="margin-top:12px" data-a="close">Looks good</button></div>
  <button class="btn" data-a="th-reset">${ico('reset',18)} Reset to default</button>`,{t:'theme'})};
+/* ---- scent hurdle racing ---- */
+const shrSet=sh=>Math.max(7,Math.min(16,Math.round(sh-4)));
+function shrHeightRes(){const s=U.shr,v=parseFloat(s.h);if(!(v>0))return '<p class="small muted" style="margin:0">Enter the shoulder height of the smallest dog in the heat.</p>';
+ const inch=s.u==='cm'?v/2.54:v;const set=shrSet(inch),raw=inch-4;const note=raw<7?' The 7 in minimum applies.':raw>16?' The 16 in maximum applies.':'';
+ return `<div class="stat">${set} in <span class="muted small">(${Math.round(set*2.54)} cm)</span></div><p class="small muted" style="margin:4px 0 0">Shoulder ${inch.toFixed(1)} in, minus 4 in, set to the nearest inch.${note}</p>`}
+function shrPtsRes(){const s=U.shr,t=parseFloat(s.t);if(!(t>0))return '<p class="small muted" style="margin:0">Enter the heat time in seconds.</p>';
+ const pen=Math.max(0,parseInt(s.p)||0),adj=t+pen*2,pts=adj>80?0:adj<30?20:adj<35?10:5;
+ return `<div class="stat">${pts} points <span class="muted small">per dog that ran</span></div><p class="small muted" style="margin:4px 0 0">Time with ${pen} penalt${pen===1?'y':'ies'} (2 s each): ${adj.toFixed(1)} s.${adj>80?' Heats over 80 s earn no points.':''} Only clean heats earn points.</p>`}
+function shrIntro(){return `<div class="card S"><b>Scent Hurdle Racing</b><p class="small muted" style="margin:6px 0 10px">A Canadian team relay. Four dogs race over four hurdles, find their own numbered dumbbell by their handler’s scent on a four-section platform, and race back. It runs under the Canadian Scent Hurdle Racing Association (CSHRA) rules.</p><button class="btn sm" data-a="shr">Hurdle heights, points and rules</button></div>`}
+SH.shr=()=>{
+ U.shr=U.shr||{h:'',u:'in',t:'',p:'0'};const s=U.shr;
+ const wd=S.dogs.filter(d=>parseFloat(d.shoulder)>0);const mn=wd.length?Math.min(...wd.map(d=>parseFloat(d.shoulder))):0;
+ const team=wd.length?`<div class="card"><b>Your dogs</b><div class="list" style="margin-top:8px;gap:6px">${wd.map(d=>`<div class="row sb"><span class="row" style="gap:8px">${avatar(d,28)}<span>${esc(d.name)}</span></span><span class="small">${parseFloat(d.shoulder)} in shoulder → ${shrSet(parseFloat(d.shoulder))} in</span></div>`).join('')}</div><p class="small" style="margin:10px 0 0"><b>The smallest dog sets the team height:</b> ${shrSet(mn)} in.</p></div>`:`<p class="small muted">Add each dog’s shoulder height on the Dogs tab to see their hurdle settings here.</p>`;
+ return shell('Scent hurdle tools',`
+ <div class="card S"><b>Hurdle height</b><div class="seg" style="margin:10px 0">${[['in','Inches'],['cm','Centimetres']].map(([k,l])=>`<button class="${s.u===k?'on':''}" data-a="shr-unit" data-v="${k}">${l}</button>`).join('')}</div><input class="inp" type="number" inputmode="decimal" step="0.5" min="0" data-f="shr-h" value="${esc(s.h)}" placeholder="Shoulder height of the smallest dog" aria-label="Shoulder height"><div id="shrH" style="margin-top:10px">${shrHeightRes()}</div></div>
+ ${team}
+ <div class="card S"><b>Heat points</b><div class="row" style="gap:10px;margin-top:10px"><input class="inp" type="number" inputmode="decimal" step="0.1" min="0" data-f="shr-t" value="${esc(s.t)}" placeholder="Heat time (s)" aria-label="Heat time in seconds"><input class="inp" type="number" inputmode="numeric" min="0" data-f="shr-p" value="${esc(s.p)}" placeholder="Penalties" aria-label="Number of 2 second penalties" style="max-width:120px"></div><div id="shrP" style="margin-top:10px">${shrPtsRes()}</div></div>
+ <div class="card"><b>Titles (2010 rules)</b><ul class="small" style="margin-top:8px"><li>50 points: Scent Hurdle Dog (SHD)</li><li>100: SHD Excellent (SHDX)</li><li>250: SHD Champion (SHDCh)</li><li>500: SHD Masters (SHD.M)</li><li>1000: SHD Masters Excellent (SHDMX)</li><li>2500: SHD Masters Champion (SHDMCh)</li></ul></div>
+ <div class="card"><b>Rules at a glance</b><ul class="small" style="margin-top:8px"><li>Two teams race at once. A race is usually the first team to win two of three heats.</li><li>A team has four to twelve registered dogs. Four dogs run each heat.</li><li>Hurdles are 10 ft apart, the first is 4 ft from the start line, and the platform is 12 ft past the fourth. Lanes are 12 ft apart.</li><li>Dumbbells are naturally scented and numbered 1 to 12 on both ends. Each team also has at least five “X” dummies.</li><li>Handlers stay behind the start line while a dog races. The next dog goes when the previous dog crosses the line.</li><li>Two-second penalties: starting line crossed early or a dog propelled over the line.</li><li>Loss of heat: handler over the line while their own dog runs, wrong dumbbell twice, steward aiding a dog, or crossing the centre line.</li><li>Release before the whistle is a dead heat.</li><li>Some indoor events use three hurdles per side and add 3 seconds to team times.</li></ul></div>
+ <p class="tiny muted">Summarized from the CSHRA rules as revised on February 1, 2010, the most complete public copy I could read, plus event premium lists and the CSHRA site. The current rules at scenthurdle.ca/rules may differ on jump heights, dumbbell specs and points, so check them before relying on any number here.</p>`,{t:'shr'})};
 SH.wrap=p=>{const s=sess(p.sid);return shell('Wrap up',`${s.dogIds.map(id=>{const d=dog(id);if(!d)return'';const w=(s.wrap&&s.wrap[id])||{};return `<div class="card"><h3 class="row" ${dotStyle(d)}>${mark(d)}${esc(d.name)}</h3><p class="small muted" style="margin:6px 0">${loggedDone(s,id)} exercise${loggedDone(s,id)===1?'':'s'} logged</p><label class="lbl">Overall</label><div class="rate">${[1,2,3,4,5].map(n=>`<button class="${w.rating===n?'on':''}" data-a="wr-rate" data-d="${id}" data-v="${n}">${n}</button>`).join('')}</div><div class="fld" style="margin-top:10px"><label class="lbl">What went well</label><textarea class="ta" style="min-height:70px" data-f="wr-good" data-d="${id}">${esc(w.good||'')}</textarea></div><div class="fld" style="margin-top:10px"><label class="lbl">Work on next time</label><textarea class="ta" style="min-height:70px" data-f="wr-next" data-d="${id}">${esc(w.next||'')}</textarea></div></div>`}).join('')}
  <div class="fld"><label class="lbl">Session notes (weather, ground, helper, anything else)</label><textarea class="ta" data-f="wr-sess">${esc(s.sessNote||'')}</textarea></div>`,{t:'wrap',foot:`<button class="btn pri" data-a="wr-finish">${ico('check',18)} Finish session</button>`})};
 SH.sdet=p=>{const s=sess(p.id);if(!s)return shell('Session','');
@@ -724,7 +786,7 @@ SH.timers=()=>{
 SH.about=()=>shell('About this library',`<p>The exercises here follow the structure of the FCI International Utility Dog regulations (IGP, 2025 revision), which Canadian clubs (CWDF, GSSCC and the CKC-recorded titles) trial under.</p>
  <div class="card"><h3>2025 changes already reflected</h3><ul class="small" style="margin-top:8px"><li>IGP V and IGP-ZTP are no longer offered.</li><li>Wall is 160 cm at all levels.</li><li>Boxes are marked for dumbbell positions.</li><li>BH heeling on leash is 30 points with no left/right turns; heeling off leash removed.</li><li>IGP 1: praise allowed between exercises, no retrieve over the hurdle, long down at 10 m with the handler standing sideways, 5 m tracking line allowed, two blinds in the search.</li><li>IGP 2: no retrieve over the wall, wall exercise 10 points, stand 10 points.</li></ul></div>
  <p class="small">I couldn’t locate a single Canadian rulebook PDF online, so please check points, distances, helper rules and any Canadian variances against your club’s current rulebook. Exercises marked “confirm” were affected by the 2025 changes. Everything is editable: tap an exercise, then Edit.</p>
- <p class="small muted">Protection work should always be done with a qualified helper under experienced supervision.</p>`,{t:'about'});
+ <p class="small muted">Protection work should always be done with a qualified helper under experienced supervision.</p><p class="small">Scent hurdle racing follows the Canadian Scent Hurdle Racing Association (CSHRA) rules. I could only read the 2010 revision in full, so check the current rules at scenthurdle.ca.</p>`,{t:'about'});
 const drillCtx=()=>{for(let i=U.stack.length-1;i>=0;i--)if(U.stack[i].t==='drill')return U.stack[i].p;return null};
 
 /* ====================== RENDER ====================== */
@@ -798,6 +860,8 @@ const ACT={
  'dog-del':()=>ask('Delete this dog and all their logs and recordings?','Delete',async()=>{const id=cur().draft.id;for(const m of Object.values(S.media))if(m.dogId===id){await mDel(m.id);delete S.media[m.id]}S.sessions.forEach(s=>{s.logs=(s.logs||[]).filter(l=>l.dogId!==id);s.dogIds=(s.dogIds||[]).filter(x=>x!==id)});S.sessions=S.sessions.filter(s=>s.dogIds.length||s.status==='active');S.dogs=S.dogs.filter(d=>d.id!==id);save();U.stack=[];render()}),
  /* review */
  rv:e=>{U.rv=e.dataset.v;render()},
+ shr:()=>push('shr'),
+ 'shr-unit':e=>{U.shr.u=e.dataset.v;renderSheets()},
  theme:()=>push('theme'),
  'bk-snooze':()=>{S.settings=S.settings||{};S.settings.snooze=Date.now()+3*864e5;persist();render()},
  'th-mode':e=>{themeObj().mode=e.dataset.v;applyTheme();save();renderSheets()},
@@ -852,7 +916,7 @@ const F={'th-p':e=>setCustom('p',e.value),'th-a':e=>setCustom('a',e.value),
  'wr-good':e=>{const s=sess(cur().sid);s.wrap=s.wrap||{};s.wrap[e.dataset.d]=Object.assign(s.wrap[e.dataset.d]||{},{good:e.value});save()},
  'wr-next':e=>{const s=sess(cur().sid);s.wrap=s.wrap||{};s.wrap[e.dataset.d]=Object.assign(s.wrap[e.dataset.d]||{},{next:e.value});save()},
  'wr-sess':e=>{sess(cur().sid).sessNote=e.value;save()},
- 'dg-name':e=>{cur().draft.name=e.value},'dg-breed':e=>{cur().draft.breed=e.value},'dg-dob':e=>{cur().draft.dob=e.value},'dg-notes':e=>{cur().draft.notes=e.value},
+ 'dg-name':e=>{cur().draft.name=e.value},'dg-sh':e=>{cur().draft.shoulder=e.value},'shr-h':e=>{U.shr.h=e.value;$('#shrH').innerHTML=shrHeightRes()},'shr-t':e=>{U.shr.t=e.value;$('#shrP').innerHTML=shrPtsRes()},'shr-p':e=>{U.shr.p=e.value;$('#shrP').innerHTML=shrPtsRes()},'dg-breed':e=>{cur().draft.breed=e.value},'dg-dob':e=>{cur().draft.dob=e.value},'dg-notes':e=>{cur().draft.notes=e.value},
  'm-cap':e=>{S.media[e.dataset.id].cap=e.value;save()},
  't-label':e=>{S.timers.find(t=>t.id===e.dataset.id).label=e.value;save()},
  'ee-name':e=>exSet({name:e.value}),'ee-ph':e=>exSet({ph:e.value}),'ee-std':e=>exSet({std:e.value}),'ee-pts':e=>exSet({pts:e.value}),'ee-mine':e=>exSet({mine:e.value}),
